@@ -1,0 +1,45 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app rook-ceph
+spec:
+  interval: 1h
+  path: ./kubernetes/apps/rook-ceph/app
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *app
+  wait: false
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: rook-ceph-cluster
+spec:
+  interval: 1h
+  path: ./kubernetes/apps/rook-ceph/cluster
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: rook-ceph
+  wait: false
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: rook-ceph-cluster
