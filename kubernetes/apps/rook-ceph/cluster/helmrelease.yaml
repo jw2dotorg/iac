@@ -82,7 +82,7 @@ spec:
           pathType: PathPrefix
         parentRefs:
           - name: envoy-internal
-            namespace: kube-system
+            namespace: network
 
     cephBlockPools:
       - name: ceph-blockpool
