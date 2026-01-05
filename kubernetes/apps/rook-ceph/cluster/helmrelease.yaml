@@ -73,6 +73,10 @@ spec:
         useAllDevices: true
         config:
           osdsPerDevice: "1"
+          encryptedDevice: "false"
+          storeType: bluestore
+        devices:
+          - name: sdb
 
     route:
       dashboard:
