@@ -1,0 +1,22 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app external-dns-opnsense
+spec:
+  interval: 1h
+  path: ./kubernetes/apps/network/external-dns-opnsense/app
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: network
+  wait: false
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
