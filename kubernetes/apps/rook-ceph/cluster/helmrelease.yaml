@@ -8,7 +8,6 @@ spec:
     kind: OCIRepository
     name: rook-ceph-cluster
   interval: 1h
-
   values:
     monitoring:
       enabled: true
@@ -119,6 +118,12 @@ spec:
     # NOTE: After disabling the filesystem, the filesystem can be removed with the following commands:
     # ceph fs fail ceph-filesystem && ceph fs rm ceph-filesystem --yes-i-really-mean-it
     cephFileSystems: []
+
+    cephFileSystemVolumeSnapshotClass:
+      enabled: true
+      name: csi-ceph-filesystem
+      isDefault: false
+      deletionPolicy: Delete
 
     cephObjectStores:
       - name: ceph-objectstore
