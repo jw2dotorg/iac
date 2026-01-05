@@ -45,3 +45,4 @@ spec:
           registry: quay.io/
       hostpathClass:
         name: openebs-hostpath
+        basePath: /var/openebs/local
