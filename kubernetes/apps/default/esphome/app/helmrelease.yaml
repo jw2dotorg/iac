@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app esphome
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: esphome
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/esphome/esphome
+              tag: 2025.12.1
+            env:
+              TZ: "${TIMEZONE}"
+              ESPHOME_DASHBOARD_USE_PING: true
+
+    service:
+      main:
+        controller: main
+        ports:
+          http:
+            port: &esphome-port 6052
+
+    route:
+      app:
+        hostnames:
+          - esphome.${SECRET_DOMAIN}
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *esphome-port
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
