@@ -1,0 +1,74 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app external-dns-opnsense
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: external-dns
+  interval: 30m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 4
+  values:
+    fullnameOverride: *app
+    logLevel: debug
+    provider:
+      name: webhook
+      webhook:
+        image:
+          repository: ghcr.io/crutonjohn/external-dns-opnsense-webhook
+          tag: v0.1.0
+        env:
+          - name: OPNSENSE_API_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: external-dns-opnsense
+                key: api_secret
+          - name: OPNSENSE_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: external-dns-opnsense
+                key: api_key
+          - name: OPNSENSE_HOST
+            value: https://${SECRET_DNS_SERVER}
+          - name: OPNSENSE_SKIP_TLS_VERIFY
+            value: "true"
+          - name: LOG_LEVEL
+            value: debug
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+
+    extraArgs:
+      - --ignore-ingress-tls-spec
+
+    policy: sync
+    registry: txt
+
+    sources:
+      - service
+      - gateway-httproute
+
+    domainFilters:
+      - ${SECRET_DOMAIN}
+
+    txtOwnerId: k8s-internal
+
+    serviceMonitor:
+      enabled: true
