@@ -1,0 +1,106 @@
+#prettier-ignore
+---
+- Events:
+    - Agenda:
+        widget:
+          type: calendar
+          view: agenda
+          maxEvents: 25
+          integrations:
+            - type: sonarr
+              service_group: Downloads
+              service_name: Sonarr
+            - type: radarr
+              service_group: Downloads
+              service_name: Radarr
+- Infrastructure:
+    - Cloudflared:
+        href: https://dash.cloudflare.com/
+        icon: cloudflare-zero-trust.png
+        description: Cloudflared Tunnel Status
+        widget:
+          type: cloudflared
+          accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNTID}}
+          tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
+          key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
+          fields: ["status"]
+    - Healthchecks:
+        href: https://dashboard.uptimerobot.com/monitors#mainDashboard
+        description: Uptime Robot Dashboard
+        widget:
+          type: uptimerobot
+          url: https://api.uptimerobot.com
+          key: {{HOMEPAGE_VAR_UPTIMEROBOT_TOKEN}}
+- Downloads:
+    - Sonarr:
+        href: https://sonarr.${SECRET_DOMAIN}
+        icon: sonarr.png
+        description: HD TV automation
+        widget:
+          type: sonarr
+          url: http://sonarr.downloads
+          key: {{HOMEPAGE_VAR_SONARR_TOKEN}}
+    - Radarr:
+        href: https://radarr.${SECRET_DOMAIN}
+        icon: radarr.png
+        description: HD movie automation
+        widget:
+          type: radarr
+          url: http://radarr.downloads
+          key: {{HOMEPAGE_VAR_RADARR_TOKEN}}
+    - SABnzbd:
+        href: https://sab.${SECRET_DOMAIN}
+        icon: sabnzbd.png
+        description: Usenet downloader
+        widget:
+          type: sabnzbd
+          url: http://sabnzbd.downloads:80
+          key: {{HOMEPAGE_VAR_SABNZBD_TOKEN}}
+- Entertainment:
+    - Jellyfin:
+        href: https://jellyfin.${SECRET_DOMAIN}
+        icon: jellyfin.png
+        description: Jellyfin streaming
+- Observability:
+    - Grafana:
+        href: https://grafana.${SECRET_DOMAIN}
+        icon: grafana.png
+        description: Dashboards and metrics
+        widget:
+          type: grafana
+          url: http://grafana.observability
+          username: {{HOMEPAGE_VAR_GRAFANA_USERNAME}}
+          password: {{HOMEPAGE_VAR_GRAFANA_PASSWORD}}
+    - Prometheus:
+        href: https://prometheus.${SECRET_DOMAIN}
+        icon: prometheus.png
+        description: Metrics scrape service
+        widget:
+          type: prometheus
+          url: http://kube-prometheus-stack-prometheus.observability:9090
+- Home:
+    - Paperless:
+        href: https://paperless.${SECRET_DOMAIN}
+        icon: paperless-ngx.png
+        description: Document management
+- Storage:
+    - Kopia:
+        href: https://kopia.${SECRET_DOMAIN}
+        icon: kopia.png
+        description: Backup repository (NFS)
+        widget:
+          type: kopia
+          url: http://kopia.storage
+    - Rook:
+        href: https://rook.${SECRET_DOMAIN}
+        icon: ceph.png
+        description: Ceph storage dashboard
+- Home Automation:
+    - Home-Assistant:
+        href: https://hass.${SECRET_DOMAIN}
+        icon: home-assistant.png
+        description: Home automation software
+        widget:
+          type: homeassistant
+          url: https://hass.${SECRET_DOMAIN}
+          key: {{HOMEPAGE_VAR_HASS_TOKEN}}

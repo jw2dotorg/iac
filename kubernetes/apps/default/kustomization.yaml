@@ -8,5 +8,6 @@ components:
 
 resources:
   - ./namespace.yaml
+  - ./homepage/ks.yaml
   - ./echo/ks.yaml
   - ./esphome/ks.yaml

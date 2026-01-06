@@ -1,0 +1,28 @@
+#prettier-ignore
+---
+- resources:
+    backend: kubernetes
+    cpu: true
+    memory: true
+    expanded: true
+- search:
+    provider: custom
+    url: https://www.google.com/search?q=
+    target: _blank
+- kubernetes:
+    cluster:
+      cpu: true
+      memory: true
+      show: true
+      showLabel: true
+    nodes:
+      cpu: true
+      memory: true
+      show: false
+      showLabel: true
+- datetime:
+    text_size: l
+    format:
+      timeStyle: short
+      dateStyle: short
+      hourCycle: h23

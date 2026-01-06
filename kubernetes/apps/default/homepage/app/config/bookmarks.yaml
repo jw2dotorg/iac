@@ -1,0 +1,16 @@
+---
+- Communicate:
+    - Gmail:
+        - icon: gmail.png
+          href: "http://gmail.com"
+- Media:
+    - YouTube:
+        - icon: youtube.png
+          href: "https://youtube.com/feed/subscriptions"
+- Git:
+    - kubesearch:
+        - icon: kubernetes-dashboard.png
+          href: "https://kubesearch.dev/"
+    - iac:
+        - icon: github.png
+          href: "https://github.com/jw2dotorg/iac"
