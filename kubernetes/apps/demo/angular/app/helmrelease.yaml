@@ -1,0 +1,101 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: angular
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: angular
+  interval: 1h
+  values:
+    controllers:
+      angular:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/jwfcb/angular-demo
+              tag: v0.1.0
+            env:
+              APP_VERSION: "1.0.0"
+              ENVIRONMENT: dev
+              POD_NAME:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.name
+              POD_NAMESPACE:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+              NODE_NAME:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 200m
+                memory: 128Mi
+
+    service:
+      app:
+        ports:
+          http:
+            port: 8080
+            protocol: HTTP
+
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: 8080
+
+    persistence:
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp/nginx
+      nginx-cache:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /var/cache/nginx
+      nginx-run:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /var/run
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
