@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - ./certificate.yaml
   - ./envoy.yaml
+  - ./gateway-internal.yaml
+  - ./gateway-external.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
   - ./podmonitor.yaml
