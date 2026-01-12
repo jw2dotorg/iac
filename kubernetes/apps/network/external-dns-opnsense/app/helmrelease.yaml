@@ -67,6 +67,7 @@ spec:
 
     domainFilters:
       - ${SECRET_DOMAIN}
+      - ${SECRET_OG_DOMAIN}
 
     txtOwnerId: k8s-internal
 
