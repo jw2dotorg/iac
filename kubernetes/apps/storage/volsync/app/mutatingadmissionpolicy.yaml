@@ -10,7 +10,7 @@ apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingAdmissionPolicy
 metadata:
   name: volsync-mover-jitter
-  namespace: volsync-system
+  namespace: volsync
 spec:
   matchConstraints:
     resourceRules:
