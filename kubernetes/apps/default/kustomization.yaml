@@ -12,3 +12,4 @@ resources:
   - ./echo/ks.yaml
   - ./esphome/ks.yaml
   - ./openspeedtest/ks.yaml
+  - ./karakeep/ks.yaml
