@@ -160,7 +160,7 @@ spec:
         existingClaim: *app
         advancedMounts:
           main:
-            app:
+            main:
               - path: /data
                 subPath: karakeep
           meilisearch:
