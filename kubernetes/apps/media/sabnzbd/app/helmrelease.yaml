@@ -22,13 +22,12 @@ spec:
               TZ: ${TZ}
               SABNZBD__PORT: &port 80
               SABNZBD__HOST_WHITELIST_ENTRIES: >-
-                sabnzbd,
-                sabnzbd.default,
-                sabnzbd.default.svc,
-                sabnzbd.default.svc.cluster,
-                sabnzbd.default.svc.cluster.local,
-                sab.${SECRET_OG_DOMAIN},
-                sabnzbd.${SECRET_OG_DOMAIN}
+                {{ .Release.Name }},
+                {{ .Release.Name }}.media,
+                {{ .Release.Name }}.media.svc,
+                {{ .Release.Name }}.media.svc.cluster,
+                {{ .Release.Name }}.media.svc.cluster.local,
+                {{ .Release.Name }}.${SECRET_OG_DOMAIN}
             envFrom:
               - secretRef:
                   name: sabnzbd
