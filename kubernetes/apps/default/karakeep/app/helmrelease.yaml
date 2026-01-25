@@ -53,7 +53,7 @@ spec:
                   secretKeyRef:
                     name: karakeep
                     key: encryption_key
-              NEXTAUTH_URL: https://karakeep.${SECRET_DOMAIN}
+              NEXTAUTH_URL: https://karakeep.${SECRET_OG_DOMAIN}
               OAUTH_PROVIDER_NAME: Authentik
               DISABLE_NEW_RELEASE_CHECK: true
               COREPACK_INTEGRITY_KEYS: 0
