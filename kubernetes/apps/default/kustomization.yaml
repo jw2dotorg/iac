@@ -13,3 +13,4 @@ resources:
   - ./esphome/ks.yaml
   - ./openspeedtest/ks.yaml
   - ./karakeep/ks.yaml
+  - ./silverbullet/ks.yaml
