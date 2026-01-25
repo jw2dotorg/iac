@@ -11,3 +11,4 @@ resources:
   - ./homepage/ks.yaml
   - ./echo/ks.yaml
   - ./esphome/ks.yaml
+  - ./openspeedtest/ks.yaml
