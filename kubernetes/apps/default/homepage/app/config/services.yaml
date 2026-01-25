@@ -38,7 +38,7 @@
         description: HD TV automation
         widget:
           type: sonarr
-          url: http://sonarr.downloads
+          url: http://sonarr.media
           key: {{HOMEPAGE_VAR_SONARR_TOKEN}}
     - Radarr:
         href: https://radarr.${SECRET_DOMAIN}
@@ -46,7 +46,7 @@
         description: HD movie automation
         widget:
           type: radarr
-          url: http://radarr.downloads
+          url: http://radarr.media
           key: {{HOMEPAGE_VAR_RADARR_TOKEN}}
     - SABnzbd:
         href: https://sab.${SECRET_DOMAIN}
@@ -54,7 +54,7 @@
         description: Usenet downloader
         widget:
           type: sabnzbd
-          url: http://sabnzbd.downloads:80
+          url: http://sabnzbd.media:80
           key: {{HOMEPAGE_VAR_SABNZBD_TOKEN}}
 - Entertainment:
     - Jellyfin:
