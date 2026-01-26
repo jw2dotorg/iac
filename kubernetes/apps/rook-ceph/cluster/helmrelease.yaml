@@ -9,11 +9,6 @@ spec:
     name: rook-ceph-cluster
   interval: 1h
   values:
-    csi:  # don't think this is gonna work
-      rbd:
-        driver:
-          create: true
-          name: rook-ceph.rbd.csi.ceph.com
     monitoring:
       enabled: true
       createPrometheusRules: true
