@@ -14,7 +14,6 @@ spec:
       enabled: true
     csi:
       cephFSKernelMountOptions: ms_mode=prefer-crc
-      enableRbdDriver: true # force this to fix csinodes
       enableCephfsDriver: false
       enableCephfsSnapshotter: false
       enableLiveness: true
