@@ -80,7 +80,7 @@ spec:
     route:
       dashboard:
         host:
-          name: rookdash.${SECRET_DOMAIN}
+          name: rook.${SECRET_DOMAIN}
           path: /
           pathType: PathPrefix
         parentRefs:
