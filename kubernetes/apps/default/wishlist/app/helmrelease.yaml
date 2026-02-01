@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app wishlist
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: wishlist
+  values:
+    controllers:
+      wishlist:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: dsavell/grav
+              tag: admin-1.7.46
+            resources:
+              requests:
+                cpu: 50m
+                memory: 500Mi
+              limits:
+                memory: 500Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 80
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_OG_DOMAIN}"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+
+    persistence:
+      config:
+        existingClaim: *app
+        globalMounts:
+          - path: /var/www/grav/user
