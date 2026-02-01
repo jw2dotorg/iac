@@ -35,6 +35,7 @@ spec:
       app:
         hostnames:
           - "{{ .Release.Name }}.${SECRET_OG_DOMAIN}"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-external
             namespace: network
