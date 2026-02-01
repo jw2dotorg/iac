@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app authentik
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: *app
+      version: 2025.12.1
+      sourceRef:
+        kind: HelmRepository
+        name: authentik
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    global:
+      podAnnotations:
+        reloader.stakater.com/auto: "true"
+      deploymentStrategy:
+        type: RollingUpdate
+      env:
+        - name: AUTHENTIK_REDIS__DB
+          value: "1" # apply fix for multi-tenant redis db
+        - name: AUTHENTIK_EMAIL__HOST
+          value: mail.${SECRET_OG_DOMAIN}
+        - name: AUTHENTIK_EMAIL__FROM
+          value: 'Authentik <authentik@{$SECRET_OG_DOMAIN}'
+      envFrom: &envFrom
+        - secretRef:
+            name: *app
+    authentik:
+      redis:
+        host: dragonfly.database.svc.cluster.local
+    postgresql:
+      enabled: false
+    prometheus:
+      rules:
+        enabled: true
+    server:
+      replicas: 1
+      initContainers:
+        - name: init-db
+          image: ghcr.io/onedr0p/postgres-init:17.4@sha256:43dd04e91e861cf912378bad987afa168fa4f13d05528304907ad0aa351195d6
+          imagePullPolicy: IfNotPresent
+          envFrom: *envFrom
+      resources:
+        requests:
+          cpu: 200m
+        limits:
+          memory: 1Gi
+      ingress:
+        enabled: false
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+    worker:
+      replicas: 2
+      resources:
+        requests:
+          cpu: 200m
+        limits:
+          memory: 1Gi
