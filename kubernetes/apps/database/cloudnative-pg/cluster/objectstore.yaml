@@ -1,0 +1,22 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: minio
+  namespace: database
+spec:
+  configuration:
+    data:
+      compression: bzip2
+    destinationPath: s3://cloudnative-pg/
+    endpointURL: https://s3.jw2.org
+    s3Credentials:
+      accessKeyId:
+        name: cloudnative-pg
+        key: minio_s3_access_key
+      secretAccessKey:
+        name: cloudnative-pg
+        key: minio_s3_secret_access_key
+    wal:
+      compression: bzip2
+      maxParallel: 4
+  retentionPolicy: 14d

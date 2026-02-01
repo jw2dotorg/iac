@@ -25,6 +25,28 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: &app cloudnative-pg-barman-cloud
+  namespace: database
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  interval: 30m
+  path: ./kubernetes/apps/database/cloudnative-pg/barman-cloud
+  prune: true
+  retryInterval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: database
+  timeout: 5m
+  wait: true
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: &app cloudnative-pg-cluster
   namespace: database
 spec:
@@ -41,6 +63,9 @@ spec:
     namespace: flux-system
   targetNamespace: database
   wait: true
+  timeout: 10m
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+
+
