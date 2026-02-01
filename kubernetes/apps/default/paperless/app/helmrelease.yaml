@@ -1,0 +1,103 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app paperless
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: paperless
+  values:
+    controllers:
+      paperless:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17
+            envFrom:
+              - secretRef:
+                  name: paperless-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/paperless-ngx/paperless-ngx
+              tag: 2.20.3@sha256:57ad9565bff3bdf2378ab1dcc21ea649dfd68ee58e0eeca2bfba0120a26563e8
+            env:
+              USERMAP_UID: 1000
+              USERMAP_GID: 1000
+              PAPERLESS_TIME_ZONE: ${TZ}
+              PAPERLESS_DBENGINE: postgresql
+              PAPERLESS_WEBSERVER_WORKERS: 2
+              PAPERLESS_TASK_WORKERS: 2
+              PAPERLESS_URL: https://paperless.${SECRET_OG_DOMAIN}
+              PAPERLESS_PORT: 8000
+              PAPERLESS_CONSUMPTION_DIR: /data/nas/consume
+              PAPERLESS_DATA_DIR: /data/local/data
+              PAPERLESS_EXPORT_DIR: /data/nas/export
+              PAPERLESS_MEDIA_ROOT: /data/local/media
+              PAPERLESS_CONSUMER_POLLING: 60
+              PAPERLESS_CONSUMER_RECURSIVE: true
+              PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: true
+              PAPERLESS_CONSUMER_DELETE_DUPLICATES: true
+              PAPERLESS_OCR_LANGUAGE: eng
+              PAPERLESS_OCR_LANGUAGES: eng
+              PAPERLESS_REDIS: redis://dragonfly.database.svc.cluster.local
+              PAPERLESS_DBHOST: postgres16-rw.database.svc.cluster.local
+              PAPERLESS_DBNAME: paperless
+              # sso
+              PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+              PAPERLESS_ACCOUNT_ALLOW_SIGNUPS: "false"
+              PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS: "true"
+              #PAPERLESS_DISABLE_REGULAR_LOGIN: 'true'
+              PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true, "continue_on_soft_render_error": true}'
+              # database
+            envFrom:
+              - secretRef:
+                  name: paperless-secret
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+            resources:
+              requests:
+                cpu: 15m
+                memory: 2Gi
+              limits:
+                memory: 4Gi
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 8000
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_OG_DOMAIN}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /data/local
+      nas:
+        type: nfs
+        server: prox.${SECRET_OG_DOMAIN}
+        path: /saspool1/docs/paperless
+        globalMounts:
+          - path: /data/nas

@@ -14,3 +14,4 @@ resources:
   - ./openspeedtest/ks.yaml
   - ./karakeep/ks.yaml
   - ./silverbullet/ks.yaml
+  - ./paperless/ks.yaml
