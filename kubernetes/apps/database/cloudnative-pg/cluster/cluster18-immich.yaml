@@ -17,7 +17,9 @@ spec:
     name: cloudnative-pg
   enableSuperuserAccess: true
   postgresql:
-    shared_preload_libraries: ["vchord.so"]
+    shared_preload_libraries:
+      - "vchord.so"
+      - "vectors.so"
     parameters:
       shared_buffers: 256MB
       max_connections: "400"
