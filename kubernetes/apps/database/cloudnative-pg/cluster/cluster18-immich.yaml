@@ -38,7 +38,7 @@ spec:
       isWALArchiver: true
       parameters:
         barmanObjectName: minio
-        serverName: postgres18-immich-v1
+        serverName: postgres18-immich-v2
 
   bootstrap:
     initdb:
