@@ -16,3 +16,4 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./jellyseerr/ks.yaml
   - ./jellyfin/ks.yaml
+  - ./immich/ks.yaml

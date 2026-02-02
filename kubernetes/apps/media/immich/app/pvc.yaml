@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-nfs
+  namespace: immich
+spec:
+  storageClassName: immich-nfs
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /saspool1/photos/immich
+    server: prox.${SECRET_OG_DOMAIN}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-nfs
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: immich-nfs
+  resources:
+    requests:
+      storage: 1Mi
