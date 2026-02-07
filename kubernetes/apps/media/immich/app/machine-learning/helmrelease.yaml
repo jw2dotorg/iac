@@ -62,7 +62,7 @@ spec:
         accessMode: ReadWriteOnce
         size: 10Gi
         advancedMounts:
-          machine-learning:
+          immich-machine-learning:
             main:
               - path: /cache
                 subPath: cache
