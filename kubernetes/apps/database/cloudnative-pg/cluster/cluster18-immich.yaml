@@ -40,12 +40,25 @@ spec:
       isWALArchiver: true
       parameters:
         barmanObjectName: minio
-        serverName: postgres18-immich-v2
+        serverName: postgres18-immich-v3
 
   bootstrap:
     initdb:
-      database: immich
-      postInitApplicationSQL:
-        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE
-        - CREATE EXTENSION IF NOT EXISTS vector CASCADE
-        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
+      import:
+        type: monolith
+        databases:
+          - 'immich'
+        roles:
+          - '*'
+        source:
+          externalCluster: &previousCluster postgres16-vectorchord
+
+  externalClusters:
+     - name: *previousCluster
+       connectionParameters:
+         host: postgres16-restored-rw
+         user: postgres
+         dbname: postgres
+       password:
+         name: cloudnative-pg
+         key: password
