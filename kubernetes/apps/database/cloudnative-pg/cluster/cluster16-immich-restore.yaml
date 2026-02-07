@@ -1,0 +1,74 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: &name postgres16-immich-restore
+spec:
+  instances: 3
+  # Immich v2.3.1 requires VectorChord >=0.3 <0.6
+  # renovate: datasource=docker depName=ghcr.io/tensorchord/cloudnative-vectorchord versioning=loose enabled=false
+  #imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18.0-0.5.3@sha256:267f6cbb32af6e109e138a143c7e9dd5d44d68433ec2303f0c30e745c788d1a9
+  imageName: ghcr.io/jw2dotorg/postgres:16-vectorchord0.4.1-pgvectors0.3.0-barman
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+    storageClass: ceph-block
+  superuserSecret:
+    name: cloudnative-pg
+  enableSuperuserAccess: true
+  postgresql:
+    pg_hba:
+      - local all all trust
+      - host all all all md5
+    shared_preload_libraries:
+      - "vchord.so"
+      - "vectors.so"
+    parameters:
+      shared_buffers: 256MB
+      max_connections: "400"
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
+  resources:
+    requests:
+      cpu: 100m
+    limits:
+      memory: 2Gi
+  monitoring:
+    enablePodMonitor: true
+
+  # for restore
+  postgresUID: 999
+  postgresGID: 999
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: minio
+        serverName: postgres18-immich-v3
+
+  bootstrap:
+    recovery:
+      source: &previousCluster postgres16-vectorchord
+
+  externalClusters:
+     - name: *previousCluster
+       barmanObjectStore:
+         data:
+           compression: bzip2
+         wal:
+           compression: bzip2
+           maxParallel: 8
+         destinationPath: s3://cloudnative-pg/
+         endpointURL: https://s3.jw2.org
+         serverName: *previousCluster
+         s3Credentials:
+           accessKeyId:
+             name: cloudnative-pg
+             key: minio_s3_access_key
+           secretAccessKey:
+             name: cloudnative-pg
+             key: minio_s3_secret_access_key
