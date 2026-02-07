@@ -5,7 +5,7 @@ namespace: database
 resources:
   #- ./cluster16-restored.yaml
   - ./cluster18.yaml
-  #- ./cluster18-immich.yaml
+  - ./cluster18-immich.yaml
   - ./cluster16-immich-restore.yaml
   - ./objectstore.yaml
   - ./scheduledbackup.yaml
