@@ -76,7 +76,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_OG_DOMAIN}"
+          - "images.${SECRET_OG_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
