@@ -1,0 +1,154 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+spec:
+  interval: 30m
+  timeout: 15m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: 80.6.0
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    cleanPrometheusOperatorObjectNames: true
+
+    alertmanager:
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - alertmanager.${SECRET_OG_DOMAIN}
+          parentRefs:
+            - name: envoy-internal
+              namespace: network
+      # TODO -services and other config
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          memory: 96Mi
+      storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: ceph-block
+              resources:
+                requests:
+                  storage: 1Gi
+
+    kube-state-metrics:
+      metricLabelsAllowlist:
+        - "deployments=[*]"
+        - "persistentvolumeclaims=[*]"
+        - "pods=[*]"
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              regex: ^(.*)$
+              replacement: $1
+              targetLabel: kubernetes_node
+
+    kubelet:
+      enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          # Drop high cardinality labels
+          - action: labeldrop
+            regex: (uid)
+          - action: labeldrop
+            regex: (id|name)
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+
+    kubeApiServer:
+      enabled: true
+
+    kubeControllerManager:
+      enabled: true
+      endpoints: &controlplane
+        - 172.16.0.103
+        - 172.16.0.120
+        - 172.16.0.121
+
+    kubeEtcd:
+      enabled: true
+      endpoints: *controlplane
+
+    kubeScheduler:
+      enabled: true
+      endpoints: *controlplane
+
+    kubeProxy:
+      enabled: false # Disabled due to eBPF
+
+    prometheus:
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - prometheus.${SECRET_OG_DOMAIN}
+          parentRefs:
+            - name: envoy-internal
+              namespace: network
+      prometheusSpec:
+        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+        version: v2.55.1 # override 'unsupported Prometheus version' error
+        image:
+          registry: docker.io
+          repository: prompp/prompp
+          tag: 0.7.2
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 64535
+          runAsGroup: 64535
+          fsGroup: 64535
+        logLevel: debug
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        enableAdminAPI: true
+        walCompression: true
+        enableFeatures:
+          - auto-gomemlimit
+          - memory-snapshot-on-shutdown
+          - new-service-discovery-manager
+        retention: 14d
+        retentionSize: 20GB
+        resources:
+          requests:
+            cpu: 100m
+          limits:
+            memory: 2Gi
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: ceph-block
+              resources:
+                requests:
+                  storage: 25Gi
+
+    grafana:
+      enabled: false
