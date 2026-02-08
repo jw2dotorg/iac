@@ -112,7 +112,7 @@ spec:
           gnetId: 15038
           revision: 3
           datasource: Prometheus
-        opnsense:
+        opnsense-exporter:
           # renovate: depName="OPNsense Exporter"
           gnetId: 21113
           revision: 1
