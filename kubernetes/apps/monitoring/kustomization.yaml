@@ -10,3 +10,4 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./smokeping/ks.yaml
   - ./snmp-exporter/ks.yaml
+  - ./loki/ks.yaml
