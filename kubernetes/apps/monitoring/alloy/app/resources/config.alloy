@@ -143,10 +143,24 @@ prometheus.remote_write "default" {
   }
 }
 
-prometheus.scrape "opnsense" {
+prometheus.scrape "opnsense_node" {
   targets = [
     {
       __address__ = "172.16.0.3:9100",
+      instance    = "opnsense",
+      group       = "firewall",
+      host        = "opnsense",
+    },
+  ]
+
+  forward_to = [prometheus.remote_write.default.receiver]
+  scrape_interval = "30s"
+}
+
+prometheus.scrape "opnsense_exporter" {
+  targets = [
+    {
+      __address__ = "opnsense-exporter:8080",
       instance    = "opnsense",
       group       = "firewall",
       host        = "opnsense",
