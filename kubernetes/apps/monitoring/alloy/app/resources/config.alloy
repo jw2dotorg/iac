@@ -136,3 +136,23 @@ loki.write "default" {
     url = "http://loki-headless.monitoring.svc.cluster.local:3100/loki/api/v1/push"
   }
 }
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://prometheus-operated.monitoring.svc.cluster.local:9090/api/v1/write"
+  }
+}
+
+prometheus.scrape "opnsense" {
+  targets = [
+    {
+      __address__ = "172.16.0.3:9100",
+      instance    = "opnsense",
+      group       = "firewall",
+      host        = "opnsense",
+    },
+  ]
+
+  forward_to = [prometheus.remote_write.default.receiver]
+  scrape_interval = "30s"
+}
