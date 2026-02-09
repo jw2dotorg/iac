@@ -11,3 +11,4 @@ resources:
   - ./smokeping/ks.yaml
   - ./snmp-exporter/ks.yaml
   - ./loki/ks.yaml
+  - ./alloy/ks.yaml
