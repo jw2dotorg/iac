@@ -17,7 +17,7 @@ spec:
           app:
             image:
               repository: huntarr/huntarr
-              tag: 9.2.3
+              tag: 9.2.4
             env:
               TZ: ${TZ}
             resources:
