@@ -18,11 +18,22 @@ spec:
     parameters:
       max_connections: "400"
       shared_buffers: 256MB
-      max_slot_wal_keep_size: 30GB
+
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
+
+  resources:
+    requests:
+      cpu: 100m
+    limits:
+      memory: 2Gi
   monitoring:
     enablePodMonitor: true
+
   backup:
-    retentionPolicy: 30d
+    retentionPolicy: 14d
     volumeSnapshot:
       className: csi-ceph-blockpool
       snapshotOwnerReference: cluster
@@ -33,23 +44,24 @@ spec:
       parameters:
         barmanObjectName: minio
         serverName: postgres18-v1
-  bootstrap:
-    initdb:
-      import:
-        type: monolith
-        databases:
-          - 'paperless'
-        roles:
-          - '*'
-        source:
-          externalCluster: &previousCluster postgres16-restored
 
-  externalClusters:
-     - name: *previousCluster
-       connectionParameters:
-         host: postgres16-restored-rw
-         user: postgres
-         dbname: postgres
-       password:
-         name: cloudnative-pg
-         key: password
+  #bootstrap:
+  #  initdb:
+  #    import:
+  #      type: monolith
+  #      databases:
+  #        - 'paperless'
+  #      roles:
+  #        - '*'
+  #      source:
+  #        externalCluster: &previousCluster postgres16-restored
+
+  #externalClusters:
+  #   - name: *previousCluster
+  #     connectionParameters:
+  #       host: postgres16-restored-rw
+  #       user: postgres
+  #       dbname: postgres
+  #     password:
+  #       name: cloudnative-pg
+  #       key: password

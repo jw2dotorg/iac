@@ -35,6 +35,11 @@ spec:
   monitoring:
     enablePodMonitor: true
 
+  backup:
+    retentionPolicy: 14d
+    volumeSnapshot:
+      className: csi-ceph-blockpool
+      snapshotOwnerReference: cluster
   plugins:
     - enabled: true
       isWALArchiver: true
