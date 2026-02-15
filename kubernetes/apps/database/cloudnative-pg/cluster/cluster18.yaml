@@ -32,15 +32,9 @@ spec:
   monitoring:
     enablePodMonitor: true
 
-  backup:
-    retentionPolicy: 14d
-    volumeSnapshot:
-      className: csi-ceph-blockpool
-      snapshotOwnerReference: cluster
   plugins:
-    - enabled: true
+    - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
-      name: barman-cloud.cloudnative-pg.io
       parameters:
         barmanObjectName: minio
         serverName: postgres18-v1

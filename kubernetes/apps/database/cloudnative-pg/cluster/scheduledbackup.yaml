@@ -6,7 +6,6 @@ metadata:
   namespace: database
 spec:
   schedule: "@daily"
-  immediate: true
   backupOwnerReference: self
   cluster:
     name: postgres18
@@ -22,7 +21,6 @@ metadata:
   namespace: database
 spec:
   schedule: "@daily"
-  immediate: true
   backupOwnerReference: self
   cluster:
     name: postgres18-immich
