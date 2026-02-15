@@ -19,12 +19,14 @@ spec:
     shared_preload_libraries:
       - "vchord.so"
     parameters:
-      shared_buffers: 256MB
       max_connections: "400"
+      shared_buffers: 256MB
+
   affinity:
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
     podAntiAffinityType: required
+
   resources:
     requests:
       cpu: 100m
@@ -34,29 +36,30 @@ spec:
     enablePodMonitor: true
 
   plugins:
-    - name: barman-cloud.cloudnative-pg.io
+    - enabled: true
       isWALArchiver: true
+      name: barman-cloud.cloudnative-pg.io
       parameters:
         barmanObjectName: minio
         serverName: postgres18-immich-v3
 
-  bootstrap:
-    initdb:
-      import:
-        type: monolith
-        databases:
-          - 'immich'
-        roles:
-          - '*'
-        source:
-          externalCluster: &previousCluster postgres16-immich-restore
+  #bootstrap:
+  #  initdb:
+  #    import:
+  #      type: monolith
+  #      databases:
+  #        - 'immich'
+  #      roles:
+  #        - '*'
+  #      source:
+  #        externalCluster: &previousCluster postgres16-immich-restore
 
-  externalClusters:
-     - name: *previousCluster
-       connectionParameters:
-         host: postgres16-immich-restore-rw
-         user: postgres
-         dbname: postgres
-       password:
-         name: cloudnative-pg
-         key: password
+  #externalClusters:
+  #   - name: *previousCluster
+  #     connectionParameters:
+  #       host: postgres16-immich-restore-rw
+  #       user: postgres
+  #       dbname: postgres
+  #     password:
+  #       name: cloudnative-pg
+  #       key: password
