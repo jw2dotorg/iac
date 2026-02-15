@@ -1,0 +1,168 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app omada-controller
+spec:
+  interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  values:
+    controllers:
+      omada-controller:
+        containers:
+          app:
+            image:
+              repository: mbentley/omada-controller
+              tag: 5.15
+            env:
+              TZ: ${TIMEZONE}
+              MANAGE_HTTP_PORT: "8088"
+              MANAGE_HTTPS_PORT: "8043"
+              PORTAL_HTTP_PORT: "8888"
+              PORTAL_HTTPS_PORT: "8843"
+              SHOW_SERVER_LOGS: "true"
+              SHOW_MONGODB_LOGS: "true"
+            resources:
+              requests:
+                cpu: 1
+                memory: '1.2Gi'
+              limits:
+                memory: 2Gi
+    service:
+      app:
+        controller: omada-controller
+        primary: true
+        ports:
+          http:
+            port: 8043
+      controller:
+        controller: omada-controller
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: "172.16.0.95"
+        externalTrafficPolicy: Local
+        ports:
+          mgmt-8088-tcp:
+            enabled: true
+            port: 8088
+            targetPort: 8088
+            protocol: TCP
+          mgmt-8043-tcp:
+            enabled: true
+            port: 8043
+            protocol: TCP
+            targetPort: 8043
+          portal-8843-tcp:
+            enabled: true
+            port: 8843
+            protocol: TCP
+            targetPort: 8843
+          eap-v5-discovery:
+            enabled: true
+            port: 29810
+            protocol: UDP
+            targetPort: 29810
+          eap-v4-discovery1:
+            enabled: true
+            port: 29811
+            protocol: TCP
+            targetPort: 29811
+          eap-v4-discovery2:
+            enabled: true
+            port: 29812
+            protocol: TCP
+            targetPort: 29812
+          eap-v4-upgrade:
+            enabled: true
+            port: 29813
+            protocol: TCP
+            targetPort: 29813
+          eap-v5-manage:
+            enabled: true
+            port: 29814
+            protocol: TCP
+            targetPort: 29814
+          eap-v5-device-info:
+            enabled: true
+            port: 29815
+            protocol: TCP
+            targetPort: 29815
+          eap-v5-remote-control:
+            enabled: true
+            port: 29816
+            protocol: TCP
+            targetPort: 29816
+          init-check:
+            enabled: true
+            port: 27001
+            protocol: UDP
+            targetPort: 27001
+          old-init-info:
+            enabled: true
+            port: 27002
+            protocol: TCP
+            targetPort: 27002
+          old-db-access:
+            enabled: true
+            port: 27017
+            protocol: TCP
+            targetPort: 27017
+          db-access:
+            enabled: true
+            port: 27217
+            protocol: TCP
+            targetPort: 27217
+
+    route:
+      app:
+        kind: TLSRoute
+        hostnames:
+          - "omada.${SECRET_DOMAIN}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            #sectionName: https
+            sectionName: tls-passthrough
+        rules:
+          - backendRefs:
+              - name: omada-controller-app
+                port: 8043
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /opt/tplink/EAPController/data
+
+      work:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        globalMounts:
+          - path: /opt/tplink/EAPController/work
+
+      logs:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        globalMounts:
+          - path: /opt/tplink/EAPController/logs
+
+      certs:
+        type: secret
+        name: ${SECRET_DOMAIN/./-}-production-tls  # Your existing wildcard cert secret
+        globalMounts:
+          - path: /cert
+            readOnly: true
+
+    #rawResources:
+    #  backend-tls-policy:
+    #    apiVersion: gateway.envoyproxy.io/v1alpha1
+    #    kind: BackendTrafficPolicy
+    #    spec:
+    #      targetRefs:
+    #        - group: gateway.networking.k8s.io
+    #          kind: HTTPRoute
+    #          name: omada-controller-app

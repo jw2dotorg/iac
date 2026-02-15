@@ -13,3 +13,4 @@ resources:
   - ./envoy-gateway/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./external-dns-opnsense/ks.yaml
+  - ./omada-controller/ks.yaml

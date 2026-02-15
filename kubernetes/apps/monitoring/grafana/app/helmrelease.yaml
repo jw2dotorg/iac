@@ -114,6 +114,12 @@ spec:
           gnetId: 15038
           revision: 3
           datasource: Prometheus
+        omada-exporter:
+          # renovate: depName="Omada Overview"
+          gnetId: 16343
+          revision: 2
+          datasource:
+            - { name: DS_PROMETHEUS-K0, value: Prometheus }
         opnsense-exporter:
           # renovate: depName="OPNsense Exporter"
           gnetId: 21113
