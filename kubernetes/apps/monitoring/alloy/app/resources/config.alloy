@@ -170,3 +170,17 @@ prometheus.scrape "opnsense_exporter" {
   forward_to = [prometheus.remote_write.default.receiver]
   scrape_interval = "30s"
 }
+
+prometheus.scrape "omada_exporter" {
+  targets = [
+    {
+      __address__ = "omada-exporter:9202",
+      instance    = "omada",
+      group       = "omada",
+      host        = "omada",
+    },
+  ]
+
+  forward_to = [prometheus.remote_write.default.receiver]
+  scrape_interval = "30s"
+}
