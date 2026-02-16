@@ -1,0 +1,360 @@
+logger:
+  default: info
+  logs:
+    frigate.data_processing.real_time.face: debug
+    frigate.embeddings.maintainer: debug
+    #frigate.record.maintainer: debug # temp debug
+
+auth:
+  enabled: false
+
+mqtt:
+  host: mosquitto
+  topic_prefix: frigate
+
+database:
+  path: /data/frigate.db
+
+# Disable until USB issue can be resolved or replaced with m.2
+#detectors:
+  #  coral:
+  #  type: edgetpu
+  #  device: usb
+detectors:
+  ov:
+    type: openvino
+    device: GPU
+
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+objects:
+  track:
+    - person
+    - dog
+    - cat
+    - car
+    - bicycle
+
+face_recognition:
+  enabled: true
+  model_size: small
+  min_area: 500
+
+classification:
+  bird:
+    enabled: true
+
+#birdseye:
+#  mode: objects
+#  quality: 1
+
+#live:
+#  quality: 1
+
+ffmpeg:
+  hwaccel_args: preset-intel-qsv-h264
+  output_args:
+    record: preset-record-generic-audio-aac
+
+detect:
+  enabled: true
+  width: 1280
+  height: 720
+  fps: 5
+
+record:
+  enabled: true
+  retain:
+    days: 5
+    mode: all
+  alerts:
+    retain:
+      days: 30  ####
+      mode: motion
+  detections:
+    retain:
+      days: 30  ####
+      mode: motion
+
+snapshots:
+  enabled: true
+  timestamp: false
+  retain:
+    default: 30
+
+go2rtc:
+  streams:
+    shed:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-shed.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
+    shed_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-shed.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2 # 1280x720 @ 10fps
+    garage:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-garage.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
+    garage_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-garage.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2  # 1280x720 @ 10fps
+    backyard:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-backyard.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
+    backyard_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-backyard.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2 # 1280x720 @ 10fps
+    driveway:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-driveway.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
+    driveway_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-driveway.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2 # 1280x720 @ 10fps
+    porch:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-porch.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
+    porch_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-porch.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2 # 1280x720 @ 10fps
+    front:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-front.{FRIGATE_DOMAIN}/live # 4096x1800 @ 25fps
+    front_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-front.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=1 # 1024x452 @ 15fps
+    side:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-side.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
+    side_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-side.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2 # 1280x720 @ 10fps
+    side-garage:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-sidegarage.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
+    side-garage_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-sidegarage.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2 # 1280x720 @ 10fps
+    doorbell:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-doorbell.{FRIGATE_DOMAIN}/h264Preview_01_main  # 2560x1920 @ 20fps
+    doorbell_sub:
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-doorbell.{FRIGATE_DOMAIN}/h264Preview_01_sub # 640x480 @ 10fps
+    doorbell-amcrest:
+        - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@doorbell-amcrest.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=0  # 2560x1920 @ 15fps
+    doorbell-amcrest_sub:
+        - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@doorbell-amcrest.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=1  # 720x576 @ 15fps
+
+cameras:
+
+  side-garage:
+    ui:
+      order: 1
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/side-garage_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/side-garage
+          roles: ["record"]
+    zones:
+      neighbors_driveway:
+        coordinates: 0,0,0,424,719,0
+        objects:  # everything but cars
+          - person
+          - dog
+          - cat
+          - bicycle
+      my_driveway:
+        coordinates: 0.559,0,1,0,0.759,1,0,1,0.03,0.754,0.222,0.357
+    motion:
+      mask:
+        - 0.689,0.034,0.686,0.089,0.961,0.093,0.963,0.034 # clock
+        - 0.517,0.524,0.522,1,0.412,1,0.441,0.519 # bushes
+    objects:
+      filters:
+        dog:
+          mask:
+            - 662,377,668,720,528,720,564,374 # bushes
+        person:
+          mask:
+            - 662,377,668,720,528,720,564,374 # bushes
+            - 0.993,0.149,0.715,0.182,0.656,0.986,0.997,0.999 # downspout
+    review:
+      alerts:
+        required_zones:
+          - my_driveway
+      detections:
+        required_zones:
+          - my_driveway
+
+
+  driveway:
+    ui:
+      order: 2
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/driveway_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/driveway
+          roles: ["record"]
+    zones:
+      neighbors_driveway:
+        coordinates: 0.005,0.599,0.007,0.006,0.383,0.006
+        objects:  # everything but cars
+          - person
+          - dog
+          - cat
+          - bicycle
+      my_driveway:
+        coordinates: 0.002,0.626,0.392,0.015,0.997,0.015,0.99,0.994,0.005,0.984
+    motion:
+      mask:
+        - 0.685,0.036,0.686,0.09,0.962,0.09,0.961,0.035 # clock
+
+  front:
+    ui:
+      order: 3
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/front_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/front
+          roles: ["record"]
+    zones:
+      neighbors_left:
+        coordinates: 0.26,0.004,0.077,0.01,0.011,0.409,0.072,0.616
+      my_yard:
+        coordinates: 0.994,0.986,0.993,0.515,0.798,0.008,0.268,0.008,0.01,0.82,0.007,0.977
+      neighbors_right:
+        coordinates: 0.994,0.481,0.808,0.002,0.995,0.004
+    motion:
+      mask:
+        - 0.752,0.035,0.75,0.088,0.966,0.09,0.968,0.037 # clock
+
+  doorbell:
+    ui:
+      order: 4
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/doorbell_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/doorbell
+          roles: ["record"]
+    detect:
+      width: 640
+      height: 480
+      fps: 10
+    objects:
+      track:
+        - person
+        - dog
+        - cat
+        - bicycle
+      filters:
+        person:
+          threshold: 0.80 # 80%
+          mask:
+            - 0.195,0.569,0.199,0.992,0.373,0.994,0.377,0.856,0.344,0.688,0.307,0.568 # tree
+    motion:
+      mask:
+        - 0.013,0.018,0.013,0.053,0.342,0.054,0.344,0.017 # clock
+        - 0.168,0.075,0.164,0.242,0.282,0.243,0.283,0.073 # light fixture
+
+  porch:
+    ui:
+      order: 5
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/porch_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/porch
+          roles: ["record"]
+    motion:
+      mask:
+        - 0.686,0.034,0.684,0.089,0.963,0.09,0.963,0.035 # clock
+
+  side:
+    ui:
+      order: 6
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/side_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/side
+          roles: ["record"]
+    zones:
+      neighbors_yard:
+        coordinates: 0.997,0.343,0.997,0.004,0.064,0.004,0.038,0.089,0.041,0.14,0.52,0.22,0.637,0.143
+        objects:  # everything but cars
+          - person
+          - dog
+          - cat
+          - bicycle
+      my_yard:
+        coordinates: 0.033,0.09,0.036,0.143,0.52,0.222,0.64,0.151,0.995,0.347,0.994,0.997,0,0.995,0,0.003,0.059,0
+    motion:
+      mask:
+        - 0.674,0.036,0.674,0.091,0.956,0.093,0.956,0.032 # clock
+    objects:
+      filters:
+        person:
+          mask:
+            - 0.993,0.352,0.992,0.995,0.839,0.995 # downspout
+    review:
+      alerts:
+        required_zones:
+          - my_yard
+      detections:
+        required_zones:
+          - my_yard
+
+  shed:
+    ui:
+      order: 7
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/shed_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/shed
+          roles: ["record"]
+    motion:
+      mask:
+        - 0.684,0.035,0.685,0.095,0.962,0.094,0.963,0.035 # clock
+
+  backyard:
+    ui:
+      order: 8
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/backyard_sub
+          roles: ["detect"]
+        - path: rtsp://127.0.0.1:8554/backyard
+          roles: ["record"]
+    motion:
+      mask:
+        - 0.684,0.035,0.685,0.094,0.965,0.102,0.966,0.03 # clock
+
+  garage:
+    ui:
+      order: 9
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/garage_sub
+          roles:
+            - detect
+        - path: rtsp://127.0.0.1:8554/garage
+          roles:
+            - record
+    objects:
+      track:
+        - person
+        - dog
+        - cat
+        - bicycle
+      filters:
+        person:
+          threshold: 0.75 # 75%
+          mask:
+            - 1008,268,1038,268,1067,133,1041,123  # garage door hinge
+    motion:
+      mask:
+        - 0.787,0.372,0.811,0.372,0.834,0.185,0.813,0.171 # garage door hinge
+        - 0.682,0.03,0.681,0.101,0.963,0.091,0.962,0.028 # clock
+
+  doorbell-amcrest:
+    ui:
+      order: 10
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/doorbell-amcrest_sub
+          roles:
+            - detect
+        - path: rtsp://127.0.0.1:8554/doorbell-amcrest
+          roles:
+            - record
