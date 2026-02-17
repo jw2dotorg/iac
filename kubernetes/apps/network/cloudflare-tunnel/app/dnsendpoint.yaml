@@ -8,3 +8,6 @@ spec:
     - dnsName: "external.${SECRET_DOMAIN}"
       recordType: CNAME
       targets: ["aac3148a-eab6-4274-82ef-d6d5349ad164.cfargotunnel.com"]
+    - dnsName: "external.${SECRET_OG_DOMAIN}"
+      recordType: CNAME
+      targets: ["aac3148a-eab6-4274-82ef-d6d5349ad164.cfargotunnel.com"]
