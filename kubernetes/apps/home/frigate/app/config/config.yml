@@ -1,8 +1,8 @@
 logger:
   default: info
-  logs:
-    frigate.data_processing.real_time.face: debug
-    frigate.embeddings.maintainer: debug
+  #logs:
+    #frigate.data_processing.real_time.face: debug
+    #frigate.embeddings.maintainer: debug
     #frigate.record.maintainer: debug # temp debug
 
 auth:
@@ -114,7 +114,7 @@ go2rtc:
     front:
       - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-front.{FRIGATE_DOMAIN}/live # 4096x1800 @ 25fps
     front_sub:
-      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-front.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=1 # 1024x452 @ 15fps
+      - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-front.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=2 # 1280x560 @ 15fps
     side:
       - rtsp://view:{FRIGATE_RTSP_PASSWORD}@cam-side.{FRIGATE_DOMAIN}/live # 2688x1520 @ 30fps
     side_sub:
@@ -174,7 +174,6 @@ cameras:
         required_zones:
           - my_driveway
 
-
   driveway:
     ui:
       order: 2
@@ -194,9 +193,13 @@ cameras:
           - bicycle
       my_driveway:
         coordinates: 0.002,0.626,0.392,0.015,0.997,0.015,0.99,0.994,0.005,0.984
+        cat:
+          threshold: 0.80 # 80%
     motion:
       mask:
         - 0.685,0.036,0.686,0.09,0.962,0.09,0.961,0.035 # clock
+    face_recognition:
+      enabled: true
 
   front:
     ui:
@@ -307,6 +310,8 @@ cameras:
     motion:
       mask:
         - 0.684,0.035,0.685,0.095,0.962,0.094,0.963,0.035 # clock
+    face_recognition:
+      enabled: false
 
   backyard:
     ui:
@@ -320,6 +325,8 @@ cameras:
     motion:
       mask:
         - 0.684,0.035,0.685,0.094,0.965,0.102,0.966,0.03 # clock
+    face_recognition:
+      enabled: false
 
   garage:
     ui:
@@ -349,6 +356,7 @@ cameras:
         - 0.682,0.03,0.681,0.101,0.963,0.091,0.962,0.028 # clock
 
   doorbell-amcrest:
+    enabled: false #
     ui:
       order: 10
     ffmpeg:
