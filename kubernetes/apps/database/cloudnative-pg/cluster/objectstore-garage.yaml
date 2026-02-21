@@ -1,0 +1,22 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: garage
+  namespace: database
+spec:
+  configuration:
+    data:
+      compression: bzip2
+    destinationPath: s3://cloudnative-pg/
+    endpointURL: https://s3.${SECRET_DOMAIN}
+    s3Credentials:
+      accessKeyId:
+        name: cloudnative-pg
+        key: garage_s3_access_key
+      secretAccessKey:
+        name: cloudnative-pg
+        key: garage_s3_secret_access_key
+    wal:
+      compression: bzip2
+      maxParallel: 4
+  retentionPolicy: 14d

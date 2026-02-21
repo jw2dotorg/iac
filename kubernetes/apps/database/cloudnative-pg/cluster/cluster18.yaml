@@ -37,7 +37,7 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
-        barmanObjectName: minio
+        barmanObjectName: garage
         serverName: postgres18-v1
 
   #bootstrap:
