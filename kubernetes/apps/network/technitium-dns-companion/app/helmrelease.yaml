@@ -1,0 +1,50 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app technitium-dns-companion
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: technitium-dns-companion
+  interval: 1h
+  values:
+    controllers:
+      technitium-dns-companion:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/fail-safe/technitium-dns-companion
+              tag: 1.4.1
+            env:
+              TRUST_PROXY: true
+            envFrom:
+              - secretRef:
+                  name: *app
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 3000
+
+    route:
+      app:
+        hostnames:
+          - "dnsapp.${SECRET_OG_DOMAIN}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /data
