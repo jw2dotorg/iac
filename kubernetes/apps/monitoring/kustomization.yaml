@@ -14,3 +14,4 @@ resources:
   - ./alloy/ks.yaml
   - ./opnsense-exporter/ks.yaml
   - ./omada-exporter/ks.yaml
+  - ./technitium-dns-exporter/ks.yaml

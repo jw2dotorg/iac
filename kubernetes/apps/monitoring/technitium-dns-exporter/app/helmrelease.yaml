@@ -1,0 +1,62 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app technitium-dns-exporter
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 1h
+  values:
+    controllers:
+      technitium-dns-exporter:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/guycalledseven/technitium-dns-prometheus-exporter
+              tag: v1.1.0
+            env:
+              SERVER_LABEL: technitum
+              TECHNITIUM_VERIFY_SSL: false
+              TECHNITIUM_STATS_RANGE: LastHour
+              TECHNITIUM_TOP_LIMIT: 50
+              EXPORTER_PORT: &metrics 9105
+            envFrom:
+              - secretRef:
+                  name: technitium-dns-exporter
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *metrics
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s

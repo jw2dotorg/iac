@@ -171,13 +171,13 @@ prometheus.scrape "opnsense_exporter" {
   scrape_interval = "30s"
 }
 
-prometheus.scrape "omada_exporter" {
+prometheus.scrape "tecnitium_dns_exporter" {
   targets = [
     {
-      __address__ = "omada-exporter:9202",
-      instance    = "omada",
-      group       = "omada",
-      host        = "omada",
+      __address__ = "technitium-dns-exporter:9105",
+      instance    = "technitium",
+      group       = "technitium",
+      host        = "technitium",
     },
   ]
 
