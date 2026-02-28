@@ -8,6 +8,9 @@ logger:
 auth:
   enabled: false
 
+tls:
+  enabled: False
+
 mqtt:
   host: mosquitto
   topic_prefix: frigate
