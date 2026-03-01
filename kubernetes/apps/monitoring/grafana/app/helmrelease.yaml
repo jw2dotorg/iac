@@ -148,8 +148,7 @@ spec:
           # renovate: depName="Technitium DNS Prometheus Exporter"
           gnetId: 24555
           revision: 1
-          datasource:
-            - { name: DS_PROMETHEUS, value: Prometheus }
+          datasource: Prometheus
         volsync:
           # renovate: depName="VolSync Dashboard"
           gnetId: 21356
