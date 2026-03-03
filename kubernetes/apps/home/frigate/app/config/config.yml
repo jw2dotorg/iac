@@ -74,17 +74,16 @@ detect:
 
 record:
   enabled: true
-  retain:
+  continuous:
     days: 5
-    mode: all
+  motion:
+    days: 14
   alerts:
     retain:
-      days: 30  ####
-      mode: motion
+      days: 30
   detections:
     retain:
-      days: 30  ####
-      mode: motion
+      days: 30
 
 snapshots:
   enabled: true
