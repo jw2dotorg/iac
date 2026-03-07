@@ -48,7 +48,7 @@ spec:
       replicas: 1
       initContainers:
         - name: init-db
-          image: ghcr.io/onedr0p/postgres-init:17.4@sha256:43dd04e91e861cf912378bad987afa168fa4f13d05528304907ad0aa351195d6
+          image: ghcr.io/onedr0p/postgres-init:18.3.0@sha256:6fa1f331cddd2eb0b6afa7b8d3685c864127a81ab01c3d9400bc3ff5263a51cf
           imagePullPolicy: IfNotPresent
           envFrom: *envFrom
       resources:
