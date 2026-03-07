@@ -32,7 +32,7 @@ spec:
         - name: AUTHENTIK_EMAIL__HOST
           value: mail.${SECRET_OG_DOMAIN}
         - name: AUTHENTIK_EMAIL__FROM
-          value: 'Authentik <authentik@{$SECRET_OG_DOMAIN}'
+          value: "Authentik <authentik@${SECRET_OG_DOMAIN}"
       envFrom: &envFrom
         - secretRef:
             name: *app
