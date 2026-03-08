@@ -20,6 +20,7 @@ spec:
               tag: 1.5.1
             env:
               TRUST_PROXY: true
+              TECHNITIUM_NODES: "primary,secondary"
             envFrom:
               - secretRef:
                   name: *app
