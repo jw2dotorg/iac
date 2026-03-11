@@ -17,7 +17,7 @@ spec:
           app:
             image:
               repository: ghcr.io/fail-safe/technitium-dns-companion
-              tag: 1.5.1
+              tag: 1.5.2
             env:
               TRUST_PROXY: true
               TECHNITIUM_NODES: "primary,secondary"
