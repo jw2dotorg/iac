@@ -12,9 +12,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: volsync
-      namespace: storage
   prune: true
   sourceRef:
     kind: GitRepository
