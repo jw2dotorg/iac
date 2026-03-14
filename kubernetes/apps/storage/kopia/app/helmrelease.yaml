@@ -26,8 +26,24 @@ spec:
             envFrom:
               - secretRef:
                   name: kopia
-            args:
-              - --without-password
+            command:
+              - /bin/sh
+              - -c
+              - |
+                export HOME=/tmp
+                export USER=kopia
+
+                # Try to connect. If it fails (status 1), attempt to create the repository.
+                if ! kopia repository connect filesystem --path=/repository --override-hostname=volsync.storage.svc.cluster.local --override-username=volsync; then
+                  echo "Repository not found or connect failed. Attempting to create..."
+                  kopia repository create filesystem --path=/repository --override-hostname=volsync.storage.svc.cluster.local --override-username=volsync
+                fi
+
+                # Set maintenance to be owned by this specific identity
+                kopia maintenance set --owner=volsync@volsync.storage.svc.cluster.local
+
+                # Start the server
+                exec kopia server start --address=0.0.0.0:80 --without-password --insecure --disable-csrf-token-checks
             probes:
               liveness: &probes
                 enabled: false
