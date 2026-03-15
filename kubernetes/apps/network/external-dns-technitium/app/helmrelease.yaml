@@ -32,6 +32,7 @@ spec:
       - "crd"
       - "gateway-httproute"
       - "gateway-tlsroute"
+      - "service"
     txtPrefix: k8s.
     txtOwnerId: default
     domainFilters:
