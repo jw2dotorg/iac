@@ -358,7 +358,7 @@ cameras:
         - 0.682,0.03,0.681,0.101,0.963,0.091,0.962,0.028 # clock
 
   doorbell-amcrest:
-    enabled: false #
+    enabled: true
     ui:
       order: 10
     ffmpeg:
