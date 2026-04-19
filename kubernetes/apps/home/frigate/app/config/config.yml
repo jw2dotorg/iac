@@ -134,7 +134,7 @@ go2rtc:
     doorbell-amcrest_sub:
         - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@doorbell-amcrest.{FRIGATE_DOMAIN}/cam/realmonitor?channel=1&subtype=1  # 720x576 @ 15fps
     doorbell-eufy:
-        - rtsp://home.{FRIGATE_DOMAIN}/T8210P3421270D40 # 2560x1920 @ 15fps
+      - rtsp://home.{FRIGATE_DOMAIN}:8554/T8210P3421270D40 # 2560x1920 @ 15fps
 
 cameras:
 
