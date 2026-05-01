@@ -86,6 +86,6 @@ spec:
       media:
         type: nfs
         server: prox.${SECRET_OG_DOMAIN}
-        path: /saspool1/media
+        path: /spinnerpoo1/media
         globalMounts:
           - path: /media
