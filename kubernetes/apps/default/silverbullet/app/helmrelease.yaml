@@ -24,7 +24,7 @@ spec:
           main:
             image:
               repository: zefhemel/silverbullet
-              tag: 2.6.1
+              tag: 2.8.0
             env:
               TZ: ${TZ}
             resources:
