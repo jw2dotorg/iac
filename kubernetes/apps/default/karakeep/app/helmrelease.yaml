@@ -121,7 +121,7 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.43.1@sha256:4407d9f9a4a5b8ef2e382827782b3dd6e0ecf8f2832ecb0344601691c13da149
+              tag: v1.45.2@sha256:271ee84030a77cfa8e60358138bb34260f69110795c2441437b44832fe865618
             args:
               - /bin/meilisearch
               - --experimental-dumpless-upgrade
