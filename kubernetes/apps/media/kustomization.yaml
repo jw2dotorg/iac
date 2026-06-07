@@ -10,6 +10,7 @@ resources:
   - ./namespace.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
+  - ./pinchflat/ks.yaml
   - ./sonarr/ks.yaml
   - ./qbittorrent/ks.yaml
   - ./sabnzbd/ks.yaml
