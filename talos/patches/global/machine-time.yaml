@@ -1,5 +1,5 @@
 machine:
   time:
     disabled: false
-    servers:
-      - 172.16.0.3
+    #servers:
+    #  - 172.16.0.3

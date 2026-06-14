@@ -1,5 +1,0 @@
-machine:
-  network:
-    disableSearchDomain: true
-    nameservers:
-      - 172.16.0.53

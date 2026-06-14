@@ -10,6 +10,7 @@
     ":semanticCommits",
   ],
   dependencyDashboard: true,
+  platformAutomerge: true,
   dependencyDashboardTitle: "Renovate Dashboard :robot:",
   schedule: ["every weekend"],
   ignorePaths: ["**/*.sops.*"],
@@ -120,6 +121,8 @@
     {
       matchUpdateTypes: ["patch"],
       labels: ["type/patch"],
+      automerge: true,
+      automergeType: "pr",
     },
     {
       matchUpdateTypes: ["digest"],
