@@ -8,4 +8,3 @@ resources:
   - ./httproute.yaml
   - ./receiver.yaml
   - ./telegram-secret.sops.yaml
-  - ./telegram-alert.yaml

@@ -3,7 +3,6 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Provider
 metadata:
   name: telegram
-  namespace: flux-system
 spec:
   type: generic
   address: http://telegram-bridge.flux-system.svc.cluster.local:8080/
@@ -12,7 +11,6 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
   name: telegram-alert
-  namespace: flux-system
 spec:
   providerRef:
     name: telegram

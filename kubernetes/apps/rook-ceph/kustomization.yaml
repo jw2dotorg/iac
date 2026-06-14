@@ -6,6 +6,7 @@ namespace: rook-ceph
 
 components:
   - ../../components/sops
+  - ../../components/telegram-alert
 
 resources:
   - ./namespace.yaml
