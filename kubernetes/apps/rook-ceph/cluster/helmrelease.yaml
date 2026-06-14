@@ -68,6 +68,12 @@ spec:
             memory: 1Gi
           limits:
             memory: 2Gi
+        prepareosd:
+          requests:
+            cpu: 100m
+            memory: 50Mi
+          limits:
+            memory: 200Mi
       storage:
         useAllNodes: true
         useAllDevices: true
@@ -150,8 +156,8 @@ spec:
               limits:
                 memory: "2Gi"
               requests:
-                cpu: "1000m"
-                memory: "1Gi"
+                cpu: "100m"
+                memory: "512Mi"
             instances: 1
             priorityClassName: system-cluster-critical
         storageClass:

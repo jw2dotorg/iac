@@ -16,9 +16,17 @@ spec:
       cephFSKernelMountOptions: ms_mode=prefer-crc
       enableCephfsDriver: false
       enableCephfsSnapshotter: false
+      enableRbdDriver: true
       enableLiveness: true
       serviceMonitor:
         enabled: true
+      createServiceAccounts: true
+      cephCSIOperator:
+        createRBAC: true
+      serviceAccountNames:
+        rbd:
+          provisioner: rbd-ctrlplugin-sa
+          node: rbd-nodeplugin-sa
     monitoring:
       enabled: true
     resources:
