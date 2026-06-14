@@ -39,6 +39,6 @@ tasks:
 
   validate:
     desc: Validate Kubernetes manifests using kubeconform and custom schemas
-    cmd: kubeconform -summary -kubernetes-version {{.KUBERNETES_VERSION}} -schema-location default -schema-location 'https://kubernetes-schemas.pages.dev/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -ignore-missing-schemas {{.KUBERNETES_DIR}}/**/*.yaml
+    cmd: kubeconform -summary -kubernetes-version {{.KUBERNETES_VERSION}} -schema-location default -schema-location 'https://kubernetes-schemas.pages.dev/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -ignore-filename-pattern '(kustomization\.yaml|httproute.*\.yaml|driver-rbd\.yaml|volsync/nfs/.*)' {{.KUBERNETES_DIR}}/**/*.yaml
     preconditions:
       - which kubeconform

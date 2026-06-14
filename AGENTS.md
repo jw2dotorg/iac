@@ -30,7 +30,7 @@ task talos:reset              # Reset nodes to maintenance mode
 ```bash
 flux-local test --path ./kubernetes --enable-helm --all-namespaces
 # Validate with standard and custom CRD schemas (skipping missing ones)
-kubeconform -summary -kubernetes-version 1.35.0 -schema-location default -schema-location 'https://kubernetes-schemas.pages.dev/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -ignore-missing-schemas ./kubernetes/**/*.yaml
+kubeconform -summary -kubernetes-version 1.35.0 -schema-location default -schema-location 'https://kubernetes-schemas.pages.dev/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -ignore-filename-pattern '(kustomization\.yaml|httproute.*\.yaml|driver-rbd\.yaml|volsync/nfs/.*)' ./kubernetes/**/*.yaml
 ```
 
 ### Tool Management
