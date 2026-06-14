@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-bridge
+  namespace: flux-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegram-bridge
+  template:
+    metadata:
+      labels:
+        app: telegram-bridge
+    spec:
+      containers:
+        - name: bridge
+          image: python:3.12-slim
+          command: ["python", "/app/app.py"]
+          env:
+            - name: TELEGRAM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-secret
+                  key: token
+            - name: TELEGRAM_CHAT_ID
+              value: "5225713334"
+            - name: PORT
+              value: "8080"
+          resources:
+            requests:
+              cpu: 5m
+              memory: 12Mi
+            limits:
+              memory: 32Mi
+          volumeMounts:
+            - name: code
+              mountPath: /app
+      volumes:
+        - name: code
+          configMap:
+            name: telegram-bridge-code

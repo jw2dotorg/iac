@@ -5,10 +5,8 @@ metadata:
   name: telegram
   namespace: flux-system
 spec:
-  type: telegram
-  channel: "5225713334"
-  secretRef:
-    name: telegram-secret
+  type: generic
+  address: http://telegram-bridge.flux-system.svc.cluster.local:8080/
 ---
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
