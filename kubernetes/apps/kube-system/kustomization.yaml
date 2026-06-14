@@ -5,6 +5,7 @@ namespace: kube-system
 
 components:
   - ../../components/sops
+  - ../../components/telegram-alert
 
 resources:
   - ./namespace.yaml
