@@ -6,3 +6,4 @@ resources:
   - ./externalsecret.yaml
   - ./externalsecret-maint.yaml
   - ./helmrelease.yaml
+  - ./kopiamaintenance.yaml
