@@ -1,0 +1,51 @@
+---
+apiVersion: notification.toolkit.fluxcd.io/v1
+kind: Provider
+metadata:
+  name: telegram
+  namespace: flux-system
+spec:
+  type: telegram
+  channel: "5225713334"
+  secretRef:
+    name: telegram-secret
+---
+apiVersion: notification.toolkit.fluxcd.io/v1
+kind: Alert
+metadata:
+  name: telegram-alert
+  namespace: flux-system
+spec:
+  providerRef:
+    name: telegram
+  eventSeverity: info
+  eventSources:
+    - kind: Kustomization
+      name: '*'
+    - kind: HelmRelease
+      name: '*'
+      namespace: database
+    - kind: HelmRelease
+      name: '*'
+      namespace: rook-ceph
+    - kind: HelmRelease
+      name: '*'
+      namespace: monitoring
+    - kind: HelmRelease
+      name: '*'
+      namespace: storage
+    - kind: HelmRelease
+      name: '*'
+      namespace: security
+    - kind: HelmRelease
+      name: '*'
+      namespace: media
+    - kind: HelmRelease
+      name: '*'
+      namespace: home
+    - kind: HelmRelease
+      name: '*'
+      namespace: network
+    - kind: HelmRelease
+      name: '*'
+      namespace: cert-manager
