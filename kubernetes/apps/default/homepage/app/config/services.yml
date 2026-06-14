@@ -91,6 +91,8 @@
         widget:
           type: kopia
           url: http://kopia.storage
+          username: kopia
+          password: {{HOMEPAGE_VAR_KOPIA_PASSWORD}}
     - Rook:
         href: https://rook.${SECRET_DOMAIN}
         icon: ceph.png
