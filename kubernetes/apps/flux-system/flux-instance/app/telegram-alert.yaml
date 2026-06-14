@@ -22,30 +22,5 @@ spec:
   eventSources:
     - kind: Kustomization
       name: '*'
-    - kind: HelmRelease
-      name: '*'
-      namespace: database
-    - kind: HelmRelease
-      name: '*'
-      namespace: rook-ceph
-    - kind: HelmRelease
-      name: '*'
-      namespace: monitoring
-    - kind: HelmRelease
-      name: '*'
-      namespace: storage
-    - kind: HelmRelease
-      name: '*'
-      namespace: security
-    - kind: HelmRelease
-      name: '*'
-      namespace: media
-    - kind: HelmRelease
-      name: '*'
-      namespace: home
-    - kind: HelmRelease
-      name: '*'
-      namespace: network
-    - kind: HelmRelease
-      name: '*'
-      namespace: cert-manager
+  exclusionList:
+    - ".*Dependencies do not meet ready condition.*"
