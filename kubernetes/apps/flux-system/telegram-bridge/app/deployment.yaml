@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: bridge
-          image: python:3.12-slim
+          image: python:3.14-slim
           command: ["python", "/app/app.py"]
           env:
             - name: TELEGRAM_TOKEN
