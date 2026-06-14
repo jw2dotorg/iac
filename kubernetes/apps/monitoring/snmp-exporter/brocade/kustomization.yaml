@@ -8,7 +8,7 @@ resources:
 configMapGenerator:
   - name: snmp-exporter-brocade
     files:
-      - snmp.yaml=./snmp.yaml
+      - snmp.yaml=./snmp.yml
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
