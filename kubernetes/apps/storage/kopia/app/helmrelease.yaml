@@ -43,7 +43,7 @@ spec:
                 kopia maintenance set --owner=volsync@volsync.storage.svc.cluster.local
 
                 # Start the server
-                exec kopia server start --address=0.0.0.0:80 --without-password --insecure --disable-csrf-token-checks
+                exec kopia server start --address=0.0.0.0:80 --insecure --disable-csrf-token-checks
             probes:
               liveness: &probes
                 enabled: false
