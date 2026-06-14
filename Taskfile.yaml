@@ -11,6 +11,8 @@ vars:
   TALOS_DIR: '{{.ROOT_DIR}}/talos'
   PRIVATE_DIR: '{{.ROOT_DIR}}/.private'
   TALOSCONFIG: '{{.ROOT_DIR}}/talos/clusterconfig/talosconfig'
+  KUBERNETES_VERSION:
+    sh: yq '.kubernetesVersion' {{.TALOS_DIR}}/talenv.yaml | tr -d 'v'
 
 env:
   KUBECONFIG: '{{.ROOT_DIR}}/kubeconfig'
@@ -21,6 +23,7 @@ includes:
   bootstrap: .taskfiles/bootstrap
   talos: .taskfiles/talos
   external-secret: .taskfiles/externalsecrets
+  volsync: .taskfiles/volsync
 
 
 tasks:
@@ -33,3 +36,9 @@ tasks:
     preconditions:
       - test -f {{.KUBECONFIG}}
       - which flux
+
+  validate:
+    desc: Validate Kubernetes manifests using kubeconform and custom schemas
+    cmd: kubeconform -summary -kubernetes-version {{.KUBERNETES_VERSION}} -schema-location default -schema-location 'https://kubernetes-schemas.pages.dev/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' -ignore-missing-schemas {{.KUBERNETES_DIR}}/**/*.yaml
+    preconditions:
+      - which kubeconform
