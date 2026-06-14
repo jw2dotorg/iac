@@ -22,3 +22,4 @@ spec:
       name: '*'
   exclusionList:
     - ".*Dependencies do not meet ready condition.*"
+    - ".*Reconciliation finished in .*$"
