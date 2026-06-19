@@ -5,6 +5,7 @@ SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
 TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"
 
 [tools]
+"github:home-operations/flate" = "latest"
 "python" = "3.14.6"
 "pipx:makejinja" = "2.8.2"
 "aqua:budimanjojo/talhelper" = "3.1.11"
@@ -24,3 +25,4 @@ TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"
 "aqua:mikefarah/yq" = "4.53.3"
 "aqua:siderolabs/talos" = "1.13.4"
 "aqua:yannh/kubeconform" = "0.8.0"
+"aqua:aquasecurity/kube-bench" = "latest"
