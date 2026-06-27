@@ -15,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     if: >-
       github.event.pull_request.user.login == 'renovate[bot]' &&
-      contains(github.event.pull_request.labels.*.name, 'type/patch')
+      (
+        contains(github.event.pull_request.labels.*.name, 'type/patch') ||
+        contains(github.event.pull_request.labels.*.name, 'type/minor') ||
+        contains(github.event.pull_request.labels.*.name, 'type/digest')
+      )
     permissions:
       contents: write
       pull-requests: write

@@ -35,3 +35,8 @@ Foundational mandates for AI agents working in this repository.
 
 - **Telegram Noise Suppression:** To avoid notification spam from routine reconciliations (e.g. OCI repositories), add regex patterns to the `exclusionList` in the shared component `kubernetes/components/telegram-alert/telegram-alert.yaml` instead of hardcoding namespaces.
 
+## Renovate & Auto-Merge
+
+- **Auto-Merge Policy:** Renovate is configured to auto-approve and auto-merge `patch`, `minor`, and `digest` updates. Major updates must be reviewed and merged manually.
+- **Approval Workflow:** Auto-merging relies on `.github/workflows/renovate-approve.yaml` which automatically approves PRs matching the allowed types (`type/patch`, `type/minor`, `type/digest`). Ensure both `.renovaterc.json5` and the GitHub workflow filter list are in sync when modifying the auto-merge policy.
+
