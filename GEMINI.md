@@ -19,6 +19,8 @@ Foundational mandates for AI agents working in this repository.
 - **Multi-Attach Errors:** VolSync mover pods often trigger Multi-Attach errors if a previous pod didn't detach correctly. Force-deleting the `VolumeAttachment` for the affected PVC is usually required.
 - **Kopia Config Path:** Kopia (v0.23.0+) requires a writable configuration path. Always configure `KOPIA_CONFIG_PATH: /tmp/repository.config` to prevent startup write permission errors.
 - **Kopia Authentication:** Keep password authentication configured on Kopia HTTP server and ensure Homepage dashboard widget settings align with those credentials.
+- **Kopia Maintenance Volume Mount:** VolSync's `KopiaMaintenance` requires the repository volume to be explicitly mounted under `spec.moverVolumes` (e.g. at `mountPath: repository`, translating to `/mnt/repository` inside the pod). The corresponding environment variables (`KOPIA_FS_PATH` and `KOPIA_REPOSITORY`) in the maintenance secret must match this mount path.
+
 
 ## Databases (Dragonfly/CloudNative-PG)
 

@@ -74,3 +74,12 @@ This document details the resolution of cluster-wide storage instability and Vol
 **Resolution:**
 - Configured `automerge: true` and `automergeType: "pr"` for both `minor` and `digest` update types in `.renovaterc.json5`.
 - Updated `.github/workflows/renovate-approve.yaml` to trigger for `type/patch`, `type/minor`, and `type/digest` labels.
+
+## Issue 10: Kopia Maintenance Pod Fails with Read-Only Filesystem Error
+**Symptoms:** The `kopia-maint` pod crash loops or ends in an `Error` state with logs showing `unable to create directory: mkdir /repository: read-only file system` or `stat /repository: no such file or directory`.
+**Root Cause:** The VolSync operator-managed `KopiaMaintenance` pod requires access to the repository volume (the NFS mount `/repository`), but it is not mounted to the pod by default. As a result, it attempts to read/write to `/repository` directly inside the container's read-only root filesystem.
+**Resolution:**
+- Updated [kopiamaintenance.yaml](file:///home/jason/projects/talos/iac/kubernetes/apps/storage/kopia/app/kopiamaintenance.yaml) to mount the NFS storage volume using `moverVolumes` at `mountPath: repository` (which mounts under `/mnt/repository` in the mover pod).
+- Set the `podSecurityContext` (UID/GID `568`) in the `KopiaMaintenance` spec to match the permissions of the main Kopia server.
+- Adjusted [externalsecret-maint.yaml](file:///home/jason/projects/talos/iac/kubernetes/apps/storage/kopia/app/externalsecret-maint.yaml) to direct `KOPIA_FS_PATH` and `KOPIA_REPOSITORY` to the `/mnt/repository` mount path.
+

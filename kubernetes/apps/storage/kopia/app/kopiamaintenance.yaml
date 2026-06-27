@@ -11,3 +11,13 @@ spec:
     schedule: 23 * * * *
   repository:
     repository: kopia-maintenance
+  podSecurityContext:
+    runAsUser: 568
+    runAsGroup: 568
+    fsGroup: 568
+  moverVolumes:
+    - mountPath: repository
+      volumeSource:
+        nfs:
+          server: ${SECRET_NFS_SERVER}
+          path: /spinnerpool/backup/VolsyncKopia
