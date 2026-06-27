@@ -67,3 +67,10 @@ This document details the resolution of cluster-wide storage instability and Vol
 **Root Cause:** Multi-app configurations or multiple Kustomizations referencing/applying the same OCIRepository trigger frequent `Progressing` events, which were captured by the cluster-wide Alert config.
 **Resolution:**
 - Added `".*OCIRepository/.*configured.*"` to the `exclusionList` in the shared component [telegram-alert.yaml](file:///home/jason/projects/talos/iac/kubernetes/components/telegram-alert/telegram-alert.yaml). This suppresses routine configuration notices while preserving actual warnings/failures.
+
+## Issue 9: Renovate Auto-Merge failing for Minor and Digest Updates
+**Symptoms:** Minor and digest pull requests opened by `renovate[bot]` are not merged automatically.
+**Root Cause:** Renovate was only configured to auto-merge patch updates. Additionally, the `.github/workflows/renovate-approve.yaml` workflow was hardcoded to only trigger for the `type/patch` label.
+**Resolution:**
+- Configured `automerge: true` and `automergeType: "pr"` for both `minor` and `digest` update types in `.renovaterc.json5`.
+- Updated `.github/workflows/renovate-approve.yaml` to trigger for `type/patch`, `type/minor`, and `type/digest` labels.

@@ -117,6 +117,8 @@
     {
       matchUpdateTypes: ["minor"],
       labels: ["type/minor"],
+      automerge: true,
+      automergeType: "pr",
     },
     {
       matchUpdateTypes: ["patch"],
@@ -127,6 +129,8 @@
     {
       matchUpdateTypes: ["digest"],
       labels: ["type/digest"],
+      automerge: true,
+      automergeType: "pr",
     },
     {
       matchDatasources: ["docker"],
