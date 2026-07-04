@@ -44,8 +44,6 @@ spec:
               ZIGBEE2MQTT_CONFIG_SERIAL_BAUDRATE: 115200
               ZIGBEE2MQTT_CONFIG_SERIAL_DISABLE_LED: false
               ZIGBEE2MQTT_CONFIG_ADVANCED_TRANSMIT_POWER: 20
-              ZIGBEE2MQTT_CONFIG_MQTT_USER: "${SECRET_MQTT_USERNAME}"
-              ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD: "${SECRET_MQTT_PASSWORD}"
             securityContext:
               privileged: true
             resources:
