@@ -26,7 +26,7 @@ spec:
               RADARR__LOG__DBENABLED: "False"
               RADARR__LOG__LEVEL: info
               RADARR__SERVER__PORT: &port 80
-              TZ: ${TIMEZONE}
+              TIMEZONE: ${TIMEZONE}
             envFrom:
             - secretRef:
                 name: radarr
