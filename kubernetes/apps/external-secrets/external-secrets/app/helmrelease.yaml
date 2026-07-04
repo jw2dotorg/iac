@@ -49,6 +49,8 @@ spec:
     createOperator: true
     bitwarden-sdk-server:
       enabled: true
+      deploymentAnnotations:
+        reloader.stakater.com/auto: "true"
       resources:
         requests:
           cpu: 50m
