@@ -28,7 +28,7 @@ spec:
               repository: ghcr.io/esphome/esphome
               tag: 2026.6.4
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "${TZ}"
               ESPHOME_DASHBOARD_USE_PING: true
 
     defaultPodOptions:

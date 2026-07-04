@@ -24,7 +24,7 @@ spec:
               repository: ghcr.io/blakeblackshear/frigate
               tag: 0.17.2
             env:
-              TZ: ${TIMEZONE}
+              TZ: ${TZ}
               LIBVA_DRIVER_NAME: iHD
             envFrom:
               - secretRef:

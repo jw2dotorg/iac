@@ -19,7 +19,7 @@ spec:
               repository: ghcr.io/koenkk/zigbee2mqtt
               tag: 2.12.1
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "${TZ}"
               ZIGBEE2MQTT_DATA: /config
               ZIGBEE2MQTT_CONFIG_HOMEASSISTANT_ENABLED: true
               ZIGBEE2MQTT_CONFIG_ADVANCED_LAST_SEEN: ISO_8601
