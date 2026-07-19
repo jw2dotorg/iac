@@ -111,6 +111,13 @@
       commitMessageTopic: "tool {{depName}}",
     },
     {
+      description: "Disable auto-merge for Talos/Kubernetes core images (require coordinated manual upgrades)",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/siderolabs/kubelet", "ghcr.io/siderolabs/installer"],
+      automerge: false,
+      labels: ["type/talos-upgrade"],
+    },
+    {
       matchUpdateTypes: ["major"],
       labels: ["type/major"],
     },
