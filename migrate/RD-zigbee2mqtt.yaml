@@ -1,0 +1,28 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: restore-zigbee2mqtt
+  namespace: home
+spec:
+  trigger:
+    manual: restore-once
+  kopia:
+    repository: zigbee2mqtt-volsync-secret
+    cacheStorageClassName: ceph-block
+    capacity: 1Gi
+    copyMethod: Snapshot
+    moverSecurityContext:
+      fsGroup: 568
+      runAsGroup: 568
+      runAsUser: 568
+    sourceIdentity:
+      sourceName: migrate-zigbee2mqtt
+      sourceNamespace: default
+    destinationPVC: zigbee2mqtt
+    storageClassName: ceph-block
+    accessModes:
+      - ReadWriteOnce
+    # Cleanup
+    cleanupCachePVC: true
+    cleanupTempPVC: true
+    volumeSnapshotClassName: ceph-block
