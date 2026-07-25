@@ -26,7 +26,7 @@ spec:
               SHOW_MONGODB_LOGS: "true"
             resources:
               requests:
-                cpu: 100m
+                cpu: 1
                 memory: '1.2Gi'
               limits:
                 memory: 2Gi
