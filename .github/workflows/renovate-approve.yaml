@@ -19,7 +19,8 @@ jobs:
         contains(github.event.pull_request.labels.*.name, 'type/patch') ||
         contains(github.event.pull_request.labels.*.name, 'type/minor') ||
         contains(github.event.pull_request.labels.*.name, 'type/digest')
-      )
+      ) &&
+      !contains(github.event.pull_request.labels.*.name, 'type/talos-upgrade')
     permissions:
       contents: write
       pull-requests: write
