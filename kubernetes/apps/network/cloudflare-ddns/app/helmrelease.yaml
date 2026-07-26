@@ -22,8 +22,8 @@ spec:
                   secretKeyRef:
                     name: cloudflare-dns-secret
                     key: api-token
-              DOMAINS: "${SECRET_DOMAIN},${SECRET_OG_DOMAIN}"
-              PROXIED: "true"
+              PROXIED_DOMAINS: "${SECRET_DOMAIN},${SECRET_OG_DOMAIN},mg.${SECRET_OG_DOMAIN}"
+              UNPROXIED_DOMAINS: "mail.${SECRET_OG_DOMAIN}"
               IP6_PROVIDER: "none"
             resources:
               requests:
