@@ -124,7 +124,7 @@ spec:
               tag: v1.50.0@sha256:9694a59df43ee3f54b3fda9c5de381a3ee9852678e3e31cadf37d6bddea7fc1b
             args:
               - /bin/meilisearch
-              - --experimental-dumpless-upgrade
+              - --experimental-logs-mode
             env:
               MEILI_NO_ANALYTICS: true
               MEILI_MASTER_KEY:
