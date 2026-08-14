@@ -155,6 +155,12 @@
       matchDatasources: ["github-releases"],
       addLabels: ["renovate/github-release"],
     },
+    {
+      description: "Map dragonfly operator image to correct github repo",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/dragonflydb/operator"],
+      sourceUrl: "https://github.com/dragonflydb/dragonfly-operator",
+    },
   ],
   customManagers: [
     {
