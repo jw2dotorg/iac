@@ -1,0 +1,69 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headlamp
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: headlamp
+      version: "0.44.0" # renovate: datasource=helm depName=headlamp registryUrl=https://kubernetes-sigs.github.io/headlamp/
+      sourceRef:
+        kind: HelmRepository
+        name: headlamp
+  values:
+    replicaCount: 1
+    config:
+      watchPlugins: true
+
+    ingress:
+      enabled: false
+
+    initContainers:
+      - command:
+          - /bin/sh
+          - "-c"
+          - |
+            kubectl config set-cluster main --server=https://kubernetes.default.svc --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            kubectl config set-credentials main --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+            kubectl config set-context main --cluster=main --user=main
+            kubectl config use-context main
+        env:
+          - name: KUBECONFIG
+            value: /home/headlamp/.config/Headlamp/kubeconfigs/config
+        # renovate: datasource=docker depName=alpine/kubectl
+        image: alpine/kubectl:1.32.1
+        name: create-kubeconfig
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 101
+          runAsNonRoot: true
+          runAsUser: 100
+        volumeMounts:
+          - mountPath: /home/headlamp/.config/Headlamp/kubeconfigs
+            name: kubeconfig
+            readOnly: false
+
+    volumeMounts:
+      - mountPath: "/home/headlamp/.config/Headlamp/kubeconfigs/"
+        name: kubeconfig
+        readOnly: true
+    volumes:
+      - name: kubeconfig
+        emptyDir: {}
+
+    pluginsManager:
+      enabled: true
+      configContent: |
+        plugins:
+          - name: cert-manager
+            source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_cert-manager
+            version: 0.1.1
+          - name: flux
+            source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_flux
+            version: 0.6.0
