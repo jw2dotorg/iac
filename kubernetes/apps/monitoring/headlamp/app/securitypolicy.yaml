@@ -11,6 +11,6 @@ spec:
   oidc:
     provider:
       issuer: "https://sso.${SECRET_OG_DOMAIN}/application/o/headlamp/"
-    clientId: "p89dqYUKRra3vVmJptEaWY6ppurNvtWfBUpaovEz"
+    clientID: "p89dqYUKRra3vVmJptEaWY6ppurNvtWfBUpaovEz"
     clientSecret:
       name: headlamp-oidc-secret
