@@ -14,3 +14,8 @@ spec:
     clientID: "p89dqYUKRra3vVmJptEaWY6ppurNvtWfBUpaovEz"
     clientSecret:
       name: headlamp-oidc-secret
+    scopes:
+      - openid
+      - profile
+      - email
+      - offline_access
