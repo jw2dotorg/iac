@@ -16,6 +16,7 @@ spec:
     replicaCount: 1
     config:
       watchPlugins: true
+      unsafeUseServiceAccountToken: true
 
     ingress:
       enabled: false
