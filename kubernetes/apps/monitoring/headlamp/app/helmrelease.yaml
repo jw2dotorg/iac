@@ -20,42 +20,10 @@ spec:
     ingress:
       enabled: false
 
-    initContainers:
-      # renovate: datasource=docker depName=alpine
-      - image: alpine:3.21
-        command: ["/bin/sh", "-c"]
-        args:
-          - |
-            apk add --no-cache kubectl
-            kubectl config set-cluster main --server=https://kubernetes.default.svc --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            kubectl config set-credentials main --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-            kubectl config set-context main --cluster=main --user=main
-            kubectl config use-context main
-        env:
-          - name: KUBECONFIG
-            value: /home/headlamp/.config/Headlamp/kubeconfigs/config
-        name: create-kubeconfig
-        securityContext:
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          runAsGroup: 101
-          runAsNonRoot: true
-          runAsUser: 100
-        volumeMounts:
-          - mountPath: /home/headlamp/.config/Headlamp/kubeconfigs
-            name: kubeconfig
-            readOnly: false
-
-    volumeMounts:
-      - mountPath: "/home/headlamp/.config/Headlamp/kubeconfigs/"
-        name: kubeconfig
-        readOnly: true
-    volumes:
-      - name: kubeconfig
-        emptyDir: {}
+    clusterRoleBinding:
+      create: true
+    serviceAccount:
+      create: true
 
     pluginsManager:
       enabled: true
