@@ -34,8 +34,6 @@ spec:
         env:
           - name: KUBECONFIG
             value: /home/headlamp/.config/Headlamp/kubeconfigs/config
-        # renovate: datasource=docker depName=alpine/kubectl
-        image: alpine/kubectl:1.32.1
         name: create-kubeconfig
         securityContext:
           capabilities:
