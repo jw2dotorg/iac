@@ -14,7 +14,7 @@ spec:
       dashboards:
         enabled: true
         grafanaOperator:
-          enabled: true
+          enabled: false
           matchLabels:
             dashboards: grafana
       prometheusRule:
