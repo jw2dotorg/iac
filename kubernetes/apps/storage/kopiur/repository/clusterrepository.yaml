@@ -5,6 +5,8 @@ kind: ClusterRepository
 metadata:
   name: expanse
 spec:
+  credentialProjection:
+    allowed: true
   allowedNamespaces:
     all: true
   backend:
