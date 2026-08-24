@@ -26,3 +26,5 @@ spec:
         kind: Secret
     substitute:
       APP: *app
+      KOPIUR_PUID: 0
+      KOPIUR_PGID: 0
