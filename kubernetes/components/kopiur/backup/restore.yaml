@@ -13,3 +13,5 @@ spec:
       offset: 0
   target:
     populator: {}
+  credentialProjection:
+    enabled: true
