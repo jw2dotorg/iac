@@ -20,8 +20,6 @@ spec:
   repository:
     kind: ClusterRepository
     name: expanse
-  credentialProjection:
-    enabled: true
   retention:
     keepLatest: 3
     keepHourly: 24
