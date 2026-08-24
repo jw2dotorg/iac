@@ -27,6 +27,8 @@ spec:
             envFrom:
               - secretRef:
                   name: kopia
+              - secretRef:
+                  name: kopiur-repository-secret
             command:
               - /bin/sh
               - -c
