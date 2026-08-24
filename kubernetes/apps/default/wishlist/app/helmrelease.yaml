@@ -10,6 +10,11 @@ spec:
     kind: OCIRepository
     name: wishlist
   values:
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
     controllers:
       wishlist:
         annotations:
@@ -19,6 +24,9 @@ spec:
             image:
               repository: dsavell/grav
               tag: admin-1.7.46
+            env:
+              PUID: 1000
+              PGID: 1000
             resources:
               requests:
                 cpu: 50m
