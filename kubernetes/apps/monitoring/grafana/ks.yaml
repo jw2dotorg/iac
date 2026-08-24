@@ -19,7 +19,7 @@ spec:
   retryInterval: 1m
   timeout: 5m
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/backup
   postBuild:
     substituteFrom:
       - name: cluster-secrets

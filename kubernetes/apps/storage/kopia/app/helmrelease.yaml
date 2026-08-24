@@ -34,10 +34,9 @@ spec:
                 export HOME=/tmp
                 export USER=kopia
 
-                # Try to connect. If it fails (status 1), attempt to create the repository.
-                if ! kopia repository connect filesystem --path=/repository --override-hostname=volsync.storage.svc.cluster.local --override-username=volsync; then
-                  echo "Repository not found or connect failed. Attempting to create..."
-                  kopia repository create filesystem --path=/repository --override-hostname=volsync.storage.svc.cluster.local --override-username=volsync
+                if ! kopia repository connect s3 --endpoint=garage.storage.svc.cluster.local:3900 --bucket=kopiur --disable-tls; then
+                  echo "Repository not found or connect failed."
+                  exit 1
                 fi
 
                 # Set maintenance to be owned by this specific identity
@@ -87,35 +86,7 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-    configMaps:
-      config:
-        data:
-          repository.config: |-
-            {
-              "storage": {
-                "type": "filesystem",
-                "config": {
-                  "path": "/repository"
-                }
-              },
-              "hostname": "volsync.storage.svc.cluster.local",
-              "username": "volsync",
-              "description": "volsync",
-              "enableActions": false
-            }
     persistence:
-      config-file:
-        type: configMap
-        identifier: config
-        globalMounts:
-          - path: /config/repository.config
-            subPath: repository.config
-      repository:
-        type: nfs
-        server: ${SECRET_NFS_SERVER}
-        path: /spinnerpool/backup/VolsyncKopia
-        globalMounts:
-          - path: /repository
       tmpfs:
         type: emptyDir
         advancedMounts:
