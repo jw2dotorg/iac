@@ -15,6 +15,7 @@ spec:
     toolbox:
       enabled: true
     cephClusterSpec:
+      skipUpgradeChecks: true
       cephConfig:
         global:
           bdev_enable_discard: "true" # quote

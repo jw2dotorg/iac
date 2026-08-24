@@ -17,11 +17,11 @@ spec:
     labels:
       app.kubernetes.io/name: esphome
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/backup
   postBuild:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
     substitute:
       APP: esphome
-      VOLSYNC_CAPACITY: 1Gi
+      KOPIUR_CAPACITY: 1Gi

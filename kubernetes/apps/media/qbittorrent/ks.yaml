@@ -15,7 +15,7 @@ spec:
     namespace: flux-system
   targetNamespace: media
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/backup
   wait: false
   interval: 30m
   retryInterval: 1m
