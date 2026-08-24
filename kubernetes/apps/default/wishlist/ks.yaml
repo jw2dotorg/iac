@@ -25,3 +25,5 @@ spec:
     substitute:
       APP: *app
       KOPIUR_CAPACITY: 10Gi
+      KOPIUR_PUID: 911
+      KOPIUR_PGID: 911

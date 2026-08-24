@@ -26,3 +26,5 @@ spec:
       APP: *app
       VOLSYNC_CLAIM: smokeping-data
       KOPIUR_CAPACITY: 1Gi
+      KOPIUR_PUID: 911
+      KOPIUR_PGID: 911
