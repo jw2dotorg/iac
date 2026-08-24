@@ -25,8 +25,8 @@ spec:
               repository: dsavell/grav
               tag: admin-1.7.46
             env:
-              PUID: 1000
-              PGID: 1000
+              PUID: "1000"
+              PGID: "1000"
             resources:
               requests:
                 cpu: 50m
