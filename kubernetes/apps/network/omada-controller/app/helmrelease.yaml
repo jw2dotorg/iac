@@ -9,6 +9,11 @@ spec:
     kind: OCIRepository
     name: *app
   values:
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
     controllers:
       omada-controller:
         containers:
@@ -17,6 +22,8 @@ spec:
               repository: mbentley/omada-controller
               tag: 6.2
             env:
+              PUID: 1000
+              PGID: 1000
               TZ: ${TZ}
               MANAGE_HTTP_PORT: "8088"
               MANAGE_HTTPS_PORT: "8043"

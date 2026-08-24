@@ -9,6 +9,11 @@ spec:
     name: technitium-dns-companion
   interval: 1h
   values:
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
     controllers:
       technitium-dns-companion:
         annotations:
@@ -19,6 +24,8 @@ spec:
               repository: ghcr.io/fail-safe/technitium-dns-companion
               tag: 1.10.1
             env:
+              PUID: 1000
+              PGID: 1000
               TRUST_PROXY: true
               TECHNITIUM_NODES: "primary,secondary"
             envFrom:
