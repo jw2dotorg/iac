@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/fail-safe/technitium-dns-companion
-              tag: 1.10.1
+              tag: 1.11.0
             env:
               PUID: "1000"
               PGID: "1000"
