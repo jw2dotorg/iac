@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: mbentley/omada-controller
-              tag: 6.2
+              tag: 6.3
             env:
               PUID: "1000"
               PGID: "1000"
