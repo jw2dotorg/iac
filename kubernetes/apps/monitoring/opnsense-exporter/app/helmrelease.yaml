@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/athennamind/opnsense-exporter
-              tag: 0.0.16
+              tag: 0.0.17
             args:
               - --exporter.instance-label=gw
               - --web.listen-address=:8080
