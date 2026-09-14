@@ -25,11 +25,17 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/esphome/esphome
+              repository: ghcr.io/home-operations/esphome
               tag: 2026.8.2
             env:
               TZ: "${TZ}"
               ESPHOME_DASHBOARD_USE_PING: true
+            resources:
+              requests:
+                cpu: 50m
+                memory: 512Mi
+              limits:
+                memory: 3072Mi
 
     defaultPodOptions:
       securityContext:
@@ -69,3 +75,9 @@ spec:
       config:
         enabled: true
         existingClaim: *app
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /cache
+      tmp:
+        type: emptyDir
