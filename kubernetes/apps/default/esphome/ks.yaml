@@ -24,4 +24,4 @@ spec:
         kind: Secret
     substitute:
       APP: esphome
-      KOPIUR_CAPACITY: 1Gi
+      KOPIUR_CAPACITY: 5Gi
