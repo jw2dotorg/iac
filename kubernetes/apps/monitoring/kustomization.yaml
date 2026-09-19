@@ -17,3 +17,4 @@ resources:
   - ./omada-exporter/ks.yaml
   - ./technitium-dns-exporter/ks.yaml
   - ./headlamp/ks.yaml
+  - ./ntfy/ks.yaml

@@ -1,0 +1,112 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app ntfy
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    controllers:
+      ntfy:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-dir:
+            image:
+              repository: docker.io/library/busybox
+              tag: 1.37.0
+            command:
+              - "/bin/sh"
+              - "-c"
+              - "mkdir -p /var/lib/ntfy/attachments /var/lib/ntfy/cache"
+            resources:
+              requests:
+                cpu: 5m
+                memory: 10Mi
+              limits:
+                memory: 50Mi
+        containers:
+          app:
+            image:
+              repository: binwiederhier/ntfy
+              tag: v2.28.0
+            command:
+              - ntfy
+              - serve
+            env:
+              TZ: ${TZ}
+              NTFY_BASE_URL: "https://ntfy.${SECRET_DOMAIN}"
+              NTFY_LISTEN_HTTP: ":8080"
+              NTFY_CACHE_FILE: "/var/lib/ntfy/cache/cache.db"
+              NTFY_AUTH_FILE: "/var/lib/ntfy/user.db"
+              NTFY_ATTACHMENT_CACHE_DIR: "/var/lib/ntfy/attachments"
+              NTFY_BEHIND_PROXY: "true"
+              NTFY_ENABLE_LOGIN: "true"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /v1/health
+                    port: &port 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 80
+            targetPort: *port
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - "{{ .Release.Name }}.${SECRET_OG_DOMAIN}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /var/lib/ntfy
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
