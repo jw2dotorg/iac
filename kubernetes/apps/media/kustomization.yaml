@@ -18,3 +18,4 @@ resources:
   - ./jellyseerr/ks.yaml
   - ./jellyfin/ks.yaml
   - ./immich/ks.yaml
+  - ./maintainerr/ks.yaml
