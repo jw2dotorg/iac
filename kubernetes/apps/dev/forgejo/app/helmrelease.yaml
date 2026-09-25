@@ -11,6 +11,8 @@ spec:
   interval: 1h
   values:
     gitea:
+      admin:
+        username: ""
       config:
         cache:
           ADAPTER: memory
