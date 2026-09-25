@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forgejo
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: forgejo
+  interval: 1h
+  values:
+    gitea:
+      config:
+        cache:
+          ADAPTER: memory
+        server:
+          ROOT_URL: https://git.${SECRET_DOMAIN}
+          SSH_DOMAIN: git.${SECRET_DOMAIN}
+          SSH_PORT: &sshPort 22
+        service:
+          DISABLE_REGISTRATION: false
+          ALLOW_ONLY_EXTERNAL_REGISTRATION: false
+          SHOW_REGISTRATION_BUTTON: true
+        webhook:
+          ALLOWED_HOST_LIST: "*"
+    image:
+      rootless: true
+      registry: code.forgejo.org
+      repository: forgejo/forgejo
+      tag: 16.0.5-rootless
+    persistence:
+      enabled: true
+      size: 10Gi
+      # storageClass: ceph-block
+    postgresql-ha:
+      enabled: false
+    postgresql:
+      enabled: true
+      primary:
+        persistence:
+          enabled: true
+          size: 10Gi
+    redis-cluster:
+      enabled: false
+    service:
+      http:
+        port: 3000
+      ssh:
+        type: ClusterIP
+        port: *sshPort
+    httpRoute:
+      enabled: false
+    tcpRoute:
+      enabled: true
+      parentRefs:
+        - name: envoy-internal
+          namespace: network
+          sectionName: ssh

@@ -1,0 +1,44 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forgejo-runner
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: forgejo-runner
+  interval: 1h
+  values:
+    controllers:
+      forgejo-runner:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: code.forgejo.org/forgejo/runner
+              tag: 3.5.0-dind
+            env:
+              FORGEJO_INSTANCE_URL: "https://git.${SECRET_DOMAIN}"
+              # You must create this secret manually or via ExternalSecrets
+              FORGEJO_RUNNER_REGISTRATION_TOKEN:
+                secretKeyRef:
+                  name: forgejo-runner-secret
+                  key: token
+            securityContext:
+              privileged: true
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+    persistence:
+      data:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        globalMounts:
+          - path: /data
