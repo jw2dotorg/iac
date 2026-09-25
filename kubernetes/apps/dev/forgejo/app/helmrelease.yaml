@@ -14,6 +14,12 @@ spec:
       admin:
         username: ""
       config:
+        database:
+          DB_TYPE: postgres
+          HOST: postgres18-rw.database.svc.cluster.local:5432
+          NAME: forgejo
+          USER: forgejo
+          PASSWD: "${SECRET_FORGEJO_DB_PASSWORD}"
         cache:
           ADAPTER: memory
         server:
@@ -33,16 +39,10 @@ spec:
       tag: 16.0.5-rootless
     persistence:
       enabled: true
-      size: 10Gi
-      # storageClass: ceph-block
+    postgresql:
+      enabled: false
     postgresql-ha:
       enabled: false
-    postgresql:
-      enabled: true
-      primary:
-        persistence:
-          enabled: true
-          size: 10Gi
     redis-cluster:
       enabled: false
     service:
