@@ -19,7 +19,7 @@ spec:
           HOST: postgres18-rw.database.svc.cluster.local:5432
           NAME: forgejo
           USER: forgejo
-          PASSWD: ""
+          PASSWD: "${DB_PASSWORD}"
         cache:
           ADAPTER: memory
         server:
@@ -32,13 +32,6 @@ spec:
           SHOW_REGISTRATION_BUTTON: true
         webhook:
           ALLOWED_HOST_LIST: "*"
-    deployment:
-      env:
-        - name: GITEA__database__PASSWD
-          valueFrom:
-            secretKeyRef:
-              name: forgejo-secret
-              key: DB_PASSWORD
     image:
       rootless: true
       registry: code.forgejo.org
