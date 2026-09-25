@@ -19,7 +19,6 @@ spec:
           HOST: postgres18-rw.database.svc.cluster.local:5432
           NAME: forgejo
           USER: forgejo
-          PASSWD: ""
         cache:
           ADAPTER: memory
         server:
