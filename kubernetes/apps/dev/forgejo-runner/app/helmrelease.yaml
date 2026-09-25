@@ -19,11 +19,11 @@ spec:
               tag: 3.5.0-dind
             env:
               FORGEJO_INSTANCE_URL: "https://git.${SECRET_DOMAIN}"
-              # You must create this secret manually or via ExternalSecrets
+              # Token is pulled from ExternalSecret
               FORGEJO_RUNNER_REGISTRATION_TOKEN:
                 secretKeyRef:
-                  name: forgejo-runner-secret
-                  key: token
+                  name: forgejo-secret
+                  key: RUNNER_TOKEN
             securityContext:
               privileged: true
             resources:
