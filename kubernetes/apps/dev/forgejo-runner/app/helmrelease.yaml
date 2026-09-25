@@ -15,12 +15,12 @@ spec:
         containers:
           app:
             image:
-              repository: code.forgejo.org/forgejo/runner
-              tag: 3.5.0
+              repository: gitea/act_runner
+              tag: latest
             env:
-              FORGEJO_INSTANCE_URL: "https://git.${SECRET_DOMAIN}"
-              # Token is pulled from ExternalSecret
-              FORGEJO_RUNNER_REGISTRATION_TOKEN:
+              GITEA_INSTANCE_URL: "https://git.${SECRET_DOMAIN}"
+              
+              GITEA_RUNNER_REGISTRATION_TOKEN:
                 secretKeyRef:
                   name: forgejo-secret
                   key: RUNNER_TOKEN
