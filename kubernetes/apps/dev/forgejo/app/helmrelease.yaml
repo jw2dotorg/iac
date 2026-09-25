@@ -7,8 +7,27 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: forgejo
   interval: 1h
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: forgejo
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: forgejo
+              spec:
+                template:
+                  spec:
+                    initContainers:
+                      - name: init-db
+                        image: ghcr.io/home-operations/postgres-init:18
+                        envFrom:
+                          - secretRef:
+                              name: forgejo-secret
   values:
     gitea:
       admin:
