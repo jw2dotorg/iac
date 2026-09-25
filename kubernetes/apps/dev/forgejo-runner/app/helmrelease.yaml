@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: code.forgejo.org/forgejo/runner
-              tag: 3.5.0-dind
+              tag: 3.5.0
             env:
               FORGEJO_INSTANCE_URL: "https://git.${SECRET_DOMAIN}"
               # Token is pulled from ExternalSecret
@@ -24,6 +24,18 @@ spec:
                 secretKeyRef:
                   name: forgejo-secret
                   key: RUNNER_TOKEN
+              DOCKER_HOST: tcp://localhost:2375
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+          dind:
+            image:
+              repository: docker
+              tag: 26-dind
+            env:
+              DOCKER_TLS_CERTDIR: ""
             securityContext:
               privileged: true
             resources:
