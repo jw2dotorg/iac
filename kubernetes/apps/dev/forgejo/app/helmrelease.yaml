@@ -45,8 +45,8 @@ spec:
           NAME: forgejo
           USER: forgejo
         ui:
-          THEMES: forgejo-auto,forgejo-light,forgejo-dark,gitlabish-light
-          DEFAULT_THEME: gitlabish-light
+          THEMES: forgejo-auto,forgejo-light,forgejo-dark,gitlab-dark
+          DEFAULT_THEME: gitlab-dark
         cache:
           ADAPTER: memory
         server:
@@ -65,8 +65,8 @@ spec:
           name: forgejo-custom-theme
     extraContainerVolumeMounts:
       - name: custom-theme
-        subPath: theme-gitlabish-light.css
-        mountPath: /data/gitea/public/assets/css/theme-gitlabish-light.css
+        subPath: theme-gitlab-dark.css
+        mountPath: /data/gitea/public/assets/css/theme-gitlab-dark.css
         readOnly: true
     image:
       rootless: true
