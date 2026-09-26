@@ -81,6 +81,16 @@
     "GitLab Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
 }
 
+/* Override default 12px code font size to 13px to match GitLab */
+code, pre, kbd, samp,
+.ui.monospace,
+.code-inner,
+.lines-num,
+.lines-code,
+.code-view {
+  font-size: 13px !important;
+}
+
 /* Forgejo's own theme variables. These names are intentionally kept
    together so the whole application follows the same dark palette. */
 :root {
