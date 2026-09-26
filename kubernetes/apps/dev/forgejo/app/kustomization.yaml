@@ -13,5 +13,7 @@ configMapGenerator:
   - name: forgejo-custom-theme
     files:
       - theme-gitlab-dark.css
+      - GitLabMono.woff2
+      - GitLabMono-Italic.woff2
 generatorOptions:
   disableNameSuffixHash: true

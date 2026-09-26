@@ -18,6 +18,19 @@
    Palette and Forgejo theme variables
    -------------------------------------------------------------------------- */
 
+@font-face {
+  font-family: 'GitLab Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./GitLabMono.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'GitLab Mono';
+  font-style: italic;
+  font-weight: 400;
+  src: url('./GitLabMono-Italic.woff2') format('woff2');
+}
+
 :root {
   /* GitLab/Pajamas-like dark surfaces */
   --gl-bg: #171717;
@@ -65,7 +78,7 @@
     -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
     "Helvetica Neue", Arial, sans-serif !important;
   --fonts-monospace:
-    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+    "GitLab Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
 }
 
 /* Forgejo's own theme variables. These names are intentionally kept
