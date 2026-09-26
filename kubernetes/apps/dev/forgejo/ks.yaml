@@ -11,8 +11,6 @@ spec:
     substituteFrom:
       - kind: Secret
         name: cluster-secrets
-      - kind: Secret
-        name: forgejo-secret
   prune: true
   sourceRef:
     kind: GitRepository

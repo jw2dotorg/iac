@@ -28,6 +28,11 @@ spec:
                         envFrom:
                           - secretRef:
                               name: forgejo-secret
+  valuesFrom:
+    - kind: Secret
+      name: forgejo-secret
+      valuesKey: DB_PASSWORD
+      targetPath: gitea.config.database.PASSWD
   values:
     gitea:
       admin:
@@ -38,7 +43,6 @@ spec:
           HOST: postgres18-rw.database.svc.cluster.local:5432
           NAME: forgejo
           USER: forgejo
-          PASSWD: "${DB_PASSWORD}"
         cache:
           ADAPTER: memory
         server:
