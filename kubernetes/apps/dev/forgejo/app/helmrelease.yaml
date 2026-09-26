@@ -68,6 +68,14 @@ spec:
         subPath: theme-gitlab-dark.css
         mountPath: /data/gitea/public/assets/css/theme-gitlab-dark.css
         readOnly: true
+      - name: custom-theme
+        subPath: GitLabMono.woff2
+        mountPath: /data/gitea/public/assets/css/GitLabMono.woff2
+        readOnly: true
+      - name: custom-theme
+        subPath: GitLabMono-Italic.woff2
+        mountPath: /data/gitea/public/assets/css/GitLabMono-Italic.woff2
+        readOnly: true
     image:
       rootless: true
       registry: code.forgejo.org
