@@ -1,0 +1,1161 @@
+/*
+ * GitLab Dark + Monokai for Forgejo
+ *
+ * Target: Forgejo 16.x repository/file view
+ * Visual target: GitLab dark UI as shown in the supplied screenshot.
+ *
+ * Install as:
+ *   custom/public/assets/css/theme-gitlab-dark.css
+ *
+ * Then add "gitlab-dark" to [ui] THEMES in app.ini.
+ *
+ * This intentionally does not reproduce GitLab's application layout.
+ * It skins Forgejo's existing repository/file layout to match the
+ * visual language in the reference screenshot.
+ */
+
+/* --------------------------------------------------------------------------
+   Palette and Forgejo theme variables
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* GitLab/Pajamas-like dark surfaces */
+  --gl-bg: #171717;
+  --gl-surface: #1f1f1f;
+  --gl-surface-raised: #292929;
+  --gl-surface-hover: #303030;
+  --gl-surface-active: #353535;
+
+  --gl-border: #3a3a3a;
+  --gl-border-subtle: #303030;
+  --gl-border-strong: #4a4a4a;
+
+  --gl-text: #e8e8e8;
+  --gl-text-secondary: #c5c5c5;
+  --gl-text-muted: #a0a0a0;
+  --gl-text-subtle: #777777;
+
+  /* GitLab-ish blue used for active controls/links */
+  --gl-blue: #63a6e9;
+  --gl-blue-hover: #75b3ed;
+  --gl-blue-active: #4f96dc;
+
+  /* Semantic colors */
+  --gl-green: #52b87a;
+  --gl-yellow: #d9a441;
+  --gl-red: #ec6a5e;
+
+  /* Monokai */
+  --mono-bg: #272822;
+  --mono-fg: #f8f8f2;
+  --mono-comment: #75715e;
+  --mono-red: #f92672;
+  --mono-green: #a6e22e;
+  --mono-yellow: #e6db74;
+  --mono-orange: #fd971f;
+  --mono-purple: #ae81ff;
+  --mono-cyan: #66d9ef;
+
+  /* Geometry */
+  --gl-radius: 7px;
+  --gl-radius-small: 5px;
+
+  /* Forgejo font hooks */
+  --fonts-proportional:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+    "Helvetica Neue", Arial, sans-serif !important;
+  --fonts-monospace:
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+}
+
+/* Forgejo's own theme variables. These names are intentionally kept
+   together so the whole application follows the same dark palette. */
+:root {
+  --color-body: var(--gl-bg) !important;
+  --color-box-header: var(--gl-surface-raised) !important;
+  --color-box-body: var(--gl-bg) !important;
+  --color-box-body-highlight: var(--gl-surface) !important;
+  --color-hover: var(--gl-surface-hover) !important;
+  --color-active: var(--gl-surface-active) !important;
+
+  --color-text: var(--gl-text) !important;
+  --color-text-light: var(--gl-text-secondary) !important;
+  --color-text-light-2: var(--gl-text-muted) !important;
+  --color-text-light-3: var(--gl-text-subtle) !important;
+
+  --color-secondary: var(--gl-surface-raised) !important;
+  --color-secondary-hover: var(--gl-surface-hover) !important;
+  --color-secondary-active: var(--gl-surface-active) !important;
+
+  --color-primary: var(--gl-blue) !important;
+  --color-primary-hover: var(--gl-blue-hover) !important;
+  --color-primary-active: var(--gl-blue-active) !important;
+  --color-accent: var(--gl-blue) !important;
+
+  --color-border: var(--gl-border) !important;
+  --color-secondary-alpha-20: rgb(255 255 255 / 8%) !important;
+  --color-secondary-alpha-30: rgb(255 255 255 / 12%) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Global page
+   -------------------------------------------------------------------------- */
+
+html,
+body {
+  background: var(--gl-bg) !important;
+  color: var(--gl-text) !important;
+  font-family: var(--fonts-proportional);
+}
+
+body {
+  font-size: 15px;
+}
+
+.full.height,
+.page-content,
+.page-content > .ui.container {
+  background: var(--gl-bg) !important;
+}
+
+a {
+  color: var(--gl-blue);
+}
+
+a:hover {
+  color: var(--gl-blue-hover);
+}
+
+::selection {
+  background: rgb(99 166 233 / 28%);
+  color: var(--gl-text);
+}
+
+/* --------------------------------------------------------------------------
+   Top navigation
+   -------------------------------------------------------------------------- */
+
+#navbar,
+.ui.top.menu,
+.full.height > .ui.menu {
+  background: #111111 !important;
+  border-bottom: 1px solid #303030 !important;
+  box-shadow: none !important;
+}
+
+#navbar .item,
+.ui.top.menu .item {
+  color: var(--gl-text-secondary) !important;
+}
+
+#navbar .item:hover,
+.ui.top.menu .item:hover {
+  background: #222222 !important;
+  color: var(--gl-text) !important;
+}
+
+/* Search */
+#navbar .searchbox input,
+#navbar .searchbox .ui.input input,
+#navbar .searchbox {
+  background: #1f1f1f !important;
+}
+
+#navbar .searchbox input {
+  color: var(--gl-text) !important;
+  border: 1px solid var(--gl-border) !important;
+  border-radius: var(--gl-radius) !important;
+  box-shadow: none !important;
+}
+
+#navbar .searchbox input:focus {
+  border-color: var(--gl-blue) !important;
+  box-shadow: 0 0 0 1px var(--gl-blue) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Main repository container
+   -------------------------------------------------------------------------- */
+
+.repository,
+.repository .ui.container {
+  color: var(--gl-text);
+}
+
+.repository .ui.container {
+  max-width: 1280px;
+}
+
+/* Forgejo has historically used a number of container/header combinations.
+   Keep all of them flat so the page resembles the reference screenshot. */
+.repository .header-wrapper,
+.repository .repo-header,
+.repository .repository-header {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Repository breadcrumb / branch row
+   -------------------------------------------------------------------------- */
+
+.repository .breadcrumb,
+.repository .ui.breadcrumb {
+  color: var(--gl-text-secondary);
+}
+
+.repository .ui.breadcrumb a {
+  color: var(--gl-text-secondary);
+}
+
+.repository .ui.breadcrumb .divider {
+  color: var(--gl-text-subtle);
+}
+
+.repository .branch-dropdown,
+.repository .branch-selector {
+  border-radius: var(--gl-radius) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Repository title
+   -------------------------------------------------------------------------- */
+
+.repository .repo-header h1,
+.repository .repository-header h1,
+.repository .repo-title,
+.repository .repo-header .repo-title {
+  color: var(--gl-text) !important;
+  font-size: 30px;
+  line-height: 38px;
+  font-weight: 650;
+  letter-spacing: -0.3px;
+}
+
+.repository .repo-header .description,
+.repository .repo-header .desc,
+.repository .repo-header .repo-description {
+  color: var(--gl-text-muted) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Repository navigation tabs
+   -------------------------------------------------------------------------- */
+
+.repository .repo-header .ui.menu,
+.repository .repo-header .ui.tabular.menu {
+  background: transparent !important;
+  border-color: var(--gl-border) !important;
+  box-shadow: none !important;
+}
+
+.repository .repo-header .ui.menu .item {
+  color: var(--gl-text-secondary) !important;
+  background: transparent !important;
+}
+
+.repository .repo-header .ui.menu .item:hover {
+  color: var(--gl-text) !important;
+  background: var(--gl-surface-hover) !important;
+}
+
+.repository .repo-header .ui.menu .active.item {
+  color: var(--gl-text) !important;
+  background: transparent !important;
+  border-color: transparent transparent var(--gl-blue) !important;
+  border-bottom-width: 2px !important;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.repository .ui.button,
+.repository .ui.buttons .button,
+.ui.button {
+  color: var(--gl-text) !important;
+  background: var(--gl-surface-raised) !important;
+  border: 1px solid var(--gl-border) !important;
+  border-radius: var(--gl-radius) !important;
+  box-shadow: none !important;
+  font-weight: 500;
+}
+
+.repository .ui.button:hover,
+.repository .ui.buttons .button:hover,
+.ui.button:hover {
+  background: var(--gl-surface-hover) !important;
+  border-color: var(--gl-border-strong) !important;
+  box-shadow: none !important;
+}
+
+.repository .ui.button:focus,
+.ui.button:focus {
+  border-color: var(--gl-blue) !important;
+  box-shadow: 0 0 0 1px var(--gl-blue) !important;
+}
+
+/* Primary actions */
+.repository .ui.primary.button,
+.repository .ui.primary.buttons .button,
+.ui.primary.button {
+  background: #2f7dcc !important;
+  border-color: #3d8bd8 !important;
+  color: #ffffff !important;
+}
+
+.repository .ui.primary.button:hover,
+.repository .ui.primary.buttons .button:hover,
+.ui.primary.button:hover {
+  background: #3d8bd8 !important;
+  border-color: #4d98df !important;
+}
+
+/* Light/white action button used in the reference */
+.repository .ui.basic.button:hover {
+  color: var(--gl-text) !important;
+}
+
+/* Small compact controls */
+.repository .ui.mini.button,
+.repository .ui.tiny.button {
+  border-radius: var(--gl-radius-small) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Dropdowns
+   -------------------------------------------------------------------------- */
+
+.ui.dropdown,
+.ui.selection.dropdown {
+  background: var(--gl-surface-raised) !important;
+  color: var(--gl-text) !important;
+  border-color: var(--gl-border) !important;
+  border-radius: var(--gl-radius) !important;
+}
+
+.ui.dropdown:hover,
+.ui.selection.dropdown:hover {
+  border-color: var(--gl-border-strong) !important;
+}
+
+.ui.dropdown .menu,
+.ui.selection.dropdown .menu {
+  background: #242424 !important;
+  border-color: var(--gl-border) !important;
+  border-radius: var(--gl-radius) !important;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 35%) !important;
+}
+
+.ui.dropdown .menu > .item,
+.ui.selection.dropdown .menu > .item {
+  color: var(--gl-text-secondary) !important;
+}
+
+.ui.dropdown .menu > .item:hover,
+.ui.selection.dropdown .menu > .item:hover {
+  background: var(--gl-surface-hover) !important;
+  color: var(--gl-text) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Inputs
+   -------------------------------------------------------------------------- */
+
+.ui.form input,
+.ui.form textarea,
+.ui.form select,
+input,
+textarea,
+select {
+  color: var(--gl-text) !important;
+  background: #1f1f1f !important;
+  border-color: var(--gl-border) !important;
+  border-radius: var(--gl-radius-small) !important;
+  box-shadow: none !important;
+}
+
+.ui.form input:focus,
+.ui.form textarea:focus,
+.ui.form select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--gl-blue) !important;
+  box-shadow: 0 0 0 1px var(--gl-blue) !important;
+}
+
+.ui.form label {
+  color: var(--gl-text-secondary) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Generic Forgejo boxes / segments
+   -------------------------------------------------------------------------- */
+
+.repository .ui.segment,
+.repository .ui.segments,
+.repository .ui.card,
+.repository .ui.table {
+  background: transparent !important;
+  border-color: var(--gl-border) !important;
+  box-shadow: none !important;
+}
+
+.repository .ui.segment.secondary,
+.repository .ui.secondary.segment {
+  background: var(--gl-surface) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Latest commit bar
+   -------------------------------------------------------------------------- */
+
+.repository .latest-commit,
+.repository .latest-commit-summary,
+.repository .commit-summary,
+.repository .commit-box,
+.repository .commits-table .latest-commit {
+  background: var(--gl-surface-raised) !important;
+  border: 1px solid var(--gl-border-subtle) !important;
+  border-radius: var(--gl-radius) !important;
+  box-shadow: none !important;
+}
+
+.repository .latest-commit .message,
+.repository .latest-commit .commit-message {
+  color: var(--gl-text) !important;
+  font-weight: 600;
+}
+
+.repository .latest-commit .time,
+.repository .latest-commit .meta,
+.repository .latest-commit .author {
+  color: var(--gl-text-muted) !important;
+}
+
+/* Commit SHA */
+.repository .sha,
+.repository .commit-sha {
+  color: var(--gl-text-secondary) !important;
+  font-family: var(--fonts-monospace);
+}
+
+/* --------------------------------------------------------------------------
+   File browser / file list
+   -------------------------------------------------------------------------- */
+
+.repository.file.list,
+.repository .file-list,
+.repository .repo-file-list,
+.repository .files-table {
+  background: transparent !important;
+  border: 1px solid var(--gl-border) !important;
+  border-radius: var(--gl-radius) !important;
+  overflow: hidden;
+}
+
+.repository.file.list .item,
+.repository .file-list .item,
+.repository .repo-file-list .item {
+  background: transparent !important;
+  border-color: var(--gl-border-subtle) !important;
+  color: var(--gl-text-secondary) !important;
+}
+
+.repository.file.list .item:hover,
+.repository .file-list .item:hover,
+.repository .repo-file-list .item:hover {
+  background: var(--gl-surface-hover) !important;
+}
+
+.repository .file-list .name,
+.repository.file.list .name {
+  color: var(--gl-text) !important;
+  font-weight: 500;
+}
+
+.repository .file-list .message,
+.repository.file.list .message {
+  color: var(--gl-text-muted) !important;
+}
+
+/* Directory/file icons */
+.repository .file-list .svg,
+.repository.file.list .svg {
+  color: var(--gl-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   File view header
+   -------------------------------------------------------------------------- */
+
+.repository.file .file-header,
+.repository.file .file-header-wrapper,
+.repository .file-header {
+  background: var(--gl-surface-raised) !important;
+  border-color: var(--gl-border) !important;
+  color: var(--gl-text-secondary) !important;
+  border-radius: var(--gl-radius) var(--gl-radius) 0 0 !important;
+  box-shadow: none !important;
+}
+
+.repository.file .file-header .file-header-name,
+.repository .file-header .file-header-name {
+  color: var(--gl-text) !important;
+  font-weight: 600;
+}
+
+/* File action buttons */
+.repository.file .file-header .ui.button,
+.repository .file-header .ui.button {
+  background: #353535 !important;
+  border-color: #464646 !important;
+  color: var(--gl-text-secondary) !important;
+}
+
+.repository.file .file-header .ui.button:hover,
+.repository .file-header .ui.button:hover {
+  background: #404040 !important;
+  color: var(--gl-text) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Raw file / code container
+   -------------------------------------------------------------------------- */
+
+.repository.file .file-content,
+.repository.file .file-view,
+.repository .file-content,
+.repository .file-view {
+  background: var(--gl-bg) !important;
+  border-color: var(--gl-border) !important;
+  color: var(--gl-text) !important;
+}
+
+.repository.file .file-content {
+  border-radius: 0 0 var(--gl-radius) var(--gl-radius);
+}
+
+/* Code table */
+.repository.file .file-content table,
+.repository.file .file-content .highlight,
+.repository.file .file-content .code-view {
+  background: var(--gl-bg) !important;
+}
+
+.repository.file .file-content td,
+.repository.file .file-content th {
+  border-color: var(--gl-border-subtle) !important;
+}
+
+.repository.file .file-content .lines-num,
+.repository.file .file-content .line-numbers,
+.repository .code-view .lines-num {
+  color: #666666 !important;
+  background: #191919 !important;
+  border-color: #2c2c2c !important;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   Markdown / README view
+   -------------------------------------------------------------------------- */
+
+.repository .markup,
+.repository .markdown,
+.repository .markdown-body,
+.repository.file .markdown {
+  color: var(--gl-text) !important;
+  background: transparent !important;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.repository .markdown h1,
+.repository .markdown h2,
+.repository .markdown h3,
+.repository .markdown h4,
+.repository .markdown h5,
+.repository .markdown h6,
+.repository .markup h1,
+.repository .markup h2,
+.repository .markup h3,
+.repository .markup h4,
+.repository .markup h5,
+.repository .markup h6 {
+  color: var(--gl-text) !important;
+  font-weight: 650;
+}
+
+.repository .markdown h1,
+.repository .markup h1 {
+  font-size: 30px;
+  line-height: 38px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.repository .markdown h2,
+.repository .markup h2 {
+  font-size: 24px;
+  line-height: 32px;
+  margin-top: 28px;
+  margin-bottom: 14px;
+}
+
+.repository .markdown h3,
+.repository .markup h3 {
+  font-size: 20px;
+  line-height: 28px;
+  margin-top: 24px;
+}
+
+.repository .markdown p,
+.repository .markup p {
+  color: var(--gl-text-secondary) !important;
+}
+
+.repository .markdown strong,
+.repository .markup strong {
+  color: var(--gl-text) !important;
+}
+
+.repository .markdown a,
+.repository .markup a {
+  color: var(--gl-blue) !important;
+}
+
+.repository .markdown hr,
+.repository .markup hr {
+  border-color: var(--gl-border) !important;
+}
+
+/* Inline code */
+.repository .markdown code,
+.repository .markup code {
+  background: #3a3a3a !important;
+  color: #e5e5e5 !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  padding: 2px 5px;
+}
+
+/* Code blocks get their own Monokai surface. */
+.repository .markdown pre,
+.repository .markup pre {
+  background: var(--mono-bg) !important;
+  color: var(--mono-fg) !important;
+  border: 1px solid #41423b !important;
+  border-radius: 5px !important;
+  box-shadow: none !important;
+}
+
+.repository .markdown pre code,
+.repository .markup pre code {
+  background: transparent !important;
+  color: var(--mono-fg) !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* Blockquotes */
+.repository .markdown blockquote,
+.repository .markup blockquote {
+  color: var(--gl-text-muted) !important;
+  border-left-color: #555555 !important;
+}
+
+/* Tables in Markdown */
+.repository .markdown table,
+.repository .markup table {
+  background: transparent !important;
+  border-color: var(--gl-border) !important;
+}
+
+.repository .markdown th,
+.repository .markdown td,
+.repository .markup th,
+.repository .markup td {
+  border-color: var(--gl-border) !important;
+}
+
+.repository .markdown th,
+.repository .markup th {
+  background: var(--gl-surface-raised) !important;
+  color: var(--gl-text) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Monokai syntax highlighting
+   -------------------------------------------------------------------------- */
+
+/*
+ * Forgejo normally renders syntax using Chroma. The first set below targets
+ * Chroma's token classes. The hljs selectors are included for installations
+ * or embedded views that use highlight.js.
+ */
+
+.chroma,
+.highlight,
+.highlight pre,
+.highlight code {
+  background: var(--mono-bg) !important;
+  color: var(--mono-fg) !important;
+}
+
+.chroma .ln,
+.chroma .lnt {
+  color: #75715e !important;
+}
+
+.chroma .c,
+.chroma .ch,
+.chroma .cm,
+.chroma .c1,
+.chroma .cs,
+.highlight .c,
+.highlight .ch,
+.highlight .cm,
+.highlight .c1,
+.highlight .cs,
+.hljs-comment {
+  color: var(--mono-comment) !important;
+}
+
+.chroma .k,
+.chroma .kc,
+.chroma .kd,
+.chroma .kn,
+.chroma .kp,
+.chroma .kr,
+.chroma .kt,
+.highlight .k,
+.highlight .kc,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kt,
+.hljs-keyword,
+.hljs-selector-tag {
+  color: var(--mono-red) !important;
+}
+
+.chroma .n,
+.chroma .na,
+.chroma .nb,
+.chroma .nc,
+.chroma .nd,
+.chroma .ne,
+.chroma .nf,
+.chroma .ni,
+.chroma .nl,
+.chroma .nn,
+.chroma .no,
+.chroma .nt,
+.chroma .nv,
+.highlight .n,
+.highlight .na,
+.highlight .nb,
+.highlight .nc,
+.highlight .nd,
+.highlight .ne,
+.highlight .nf,
+.highlight .ni,
+.highlight .nl,
+.highlight .nn,
+.highlight .no,
+.highlight .nt,
+.highlight .nv {
+  color: var(--mono-fg) !important;
+}
+
+.chroma .nb,
+.chroma .nc,
+.chroma .nn,
+.highlight .nb,
+.highlight .nc,
+.highlight .nn,
+.hljs-built_in,
+.hljs-type {
+  color: var(--mono-cyan) !important;
+}
+
+.chroma .nf,
+.chroma .fm,
+.highlight .nf,
+.highlight .fm,
+.hljs-title,
+.hljs-title.function_,
+.hljs-function {
+  color: var(--mono-green) !important;
+}
+
+.chroma .na,
+.highlight .na,
+.hljs-attr,
+.hljs-attribute {
+  color: var(--mono-green) !important;
+}
+
+.chroma .s,
+.chroma .sa,
+.chroma .sb,
+.chroma .sc,
+.chroma .dl,
+.chroma .sd,
+.chroma .s2,
+.chroma .se,
+.chroma .sh,
+.chroma .si,
+.chroma .sx,
+.chroma .sr,
+.chroma .ss,
+.highlight .s,
+.highlight .sa,
+.highlight .sb,
+.highlight .sc,
+.highlight .dl,
+.highlight .sd,
+.highlight .s2,
+.highlight .se,
+.highlight .sh,
+.highlight .si,
+.highlight .sx,
+.highlight .sr,
+.highlight .ss,
+.hljs-string,
+.hljs-regexp {
+  color: var(--mono-yellow) !important;
+}
+
+.chroma .m,
+.chroma .mb,
+.chroma .mf,
+.chroma .mh,
+.chroma .mi,
+.chroma .mo,
+.chroma .il,
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo,
+.highlight .il,
+.hljs-number {
+  color: var(--mono-purple) !important;
+}
+
+.chroma .o,
+.chroma .ow,
+.highlight .o,
+.highlight .ow,
+.hljs-operator {
+  color: var(--mono-red) !important;
+}
+
+.chroma .p,
+.highlight .p {
+  color: var(--mono-fg) !important;
+}
+
+.chroma .err,
+.highlight .err {
+  color: var(--mono-red) !important;
+  background: transparent !important;
+}
+
+.chroma .gd,
+.highlight .gd {
+  color: #f92672 !important;
+}
+
+.chroma .gi,
+.highlight .gi {
+  color: #a6e22e !important;
+}
+
+.chroma .ge,
+.highlight .ge {
+  font-style: italic;
+}
+
+.chroma .gs,
+.highlight .gs {
+  font-weight: 700;
+}
+
+.chroma .gh,
+.highlight .gh {
+  color: var(--mono-cyan) !important;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Specific YAML-friendly Monokai tuning
+   -------------------------------------------------------------------------- */
+
+.chroma .nt,
+.highlight .nt {
+  color: var(--mono-red) !important;
+}
+
+.chroma .l,
+.highlight .l {
+  color: var(--mono-fg) !important;
+}
+
+.chroma .bp,
+.highlight .bp {
+  color: var(--mono-cyan) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Issue / PR lists
+   -------------------------------------------------------------------------- */
+
+.repository .issue.list,
+.repository .pulls.list,
+.repository .issue-list {
+  border-color: var(--gl-border) !important;
+  background: transparent !important;
+}
+
+.repository .issue.list .item,
+.repository .pulls.list .item,
+.repository .issue-list .item {
+  background: transparent !important;
+  border-color: var(--gl-border-subtle) !important;
+}
+
+.repository .issue.list .item:hover,
+.repository .pulls.list .item:hover,
+.repository .issue-list .item:hover {
+  background: var(--gl-surface-hover) !important;
+}
+
+.repository .issue.list .title,
+.repository .pulls.list .title {
+  color: var(--gl-text) !important;
+  font-weight: 600;
+}
+
+.repository .issue.list .metas,
+.repository .pulls.list .metas {
+  color: var(--gl-text-muted) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Labels / badges
+   -------------------------------------------------------------------------- */
+
+.ui.label {
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+.ui.basic.label {
+  background: transparent !important;
+  border-color: var(--gl-border) !important;
+  color: var(--gl-text-secondary) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+.repository .ui.table,
+.ui.table {
+  color: var(--gl-text-secondary) !important;
+  background: transparent !important;
+  border-color: var(--gl-border) !important;
+}
+
+.repository .ui.table thead th,
+.ui.table thead th {
+  background: var(--gl-surface-raised) !important;
+  color: var(--gl-text-secondary) !important;
+  border-color: var(--gl-border) !important;
+}
+
+.repository .ui.table td,
+.ui.table td {
+  border-color: var(--gl-border-subtle) !important;
+}
+
+.repository .ui.table tbody tr:hover,
+.ui.table tbody tr:hover {
+  background: var(--gl-surface-hover) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Diff view
+   -------------------------------------------------------------------------- */
+
+.repository .diff-file-box,
+.repository .diff-file-header,
+.repository .diff-file-body {
+  border-color: var(--gl-border) !important;
+  box-shadow: none !important;
+}
+
+.repository .diff-file-header {
+  background: var(--gl-surface-raised) !important;
+  color: var(--gl-text-secondary) !important;
+}
+
+.repository .diff-file-body {
+  background: var(--gl-bg) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Comments / discussions
+   -------------------------------------------------------------------------- */
+
+.repository .comment-list .comment,
+.repository .comment-list .comment .content {
+  border-color: var(--gl-border) !important;
+  background: transparent !important;
+}
+
+.repository .comment .content {
+  color: var(--gl-text-secondary) !important;
+}
+
+.repository .comment .header {
+  color: var(--gl-text) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Alerts
+   -------------------------------------------------------------------------- */
+
+.ui.message {
+  background: var(--gl-surface-raised) !important;
+  color: var(--gl-text-secondary) !important;
+  border-color: var(--gl-border) !important;
+  border-radius: var(--gl-radius) !important;
+  box-shadow: none !important;
+}
+
+.ui.positive.message,
+.ui.success.message {
+  background: #193324 !important;
+  border-color: #2c6243 !important;
+}
+
+.ui.warning.message {
+  background: #342c19 !important;
+  border-color: #65552d !important;
+}
+
+.ui.negative.message,
+.ui.error.message {
+  background: #351f1f !important;
+  border-color: #693535 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Popups / modals
+   -------------------------------------------------------------------------- */
+
+.ui.popup,
+.ui.modal {
+  background: #242424 !important;
+  color: var(--gl-text) !important;
+  border-color: var(--gl-border) !important;
+  border-radius: var(--gl-radius) !important;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 45%) !important;
+}
+
+.ui.modal > .header,
+.ui.modal > .content,
+.ui.modal > .actions {
+  background: transparent !important;
+  color: var(--gl-text) !important;
+  border-color: var(--gl-border) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Pagination
+   -------------------------------------------------------------------------- */
+
+.repository .pagination.menu,
+.pagination.menu {
+  background: transparent !important;
+  border-color: var(--gl-border) !important;
+  box-shadow: none !important;
+}
+
+.repository .pagination.menu .item,
+.pagination.menu .item {
+  background: var(--gl-surface-raised) !important;
+  color: var(--gl-text-secondary) !important;
+  border-color: var(--gl-border) !important;
+}
+
+.repository .pagination.menu .active.item,
+.pagination.menu .active.item {
+  background: var(--gl-blue) !important;
+  color: #ffffff !important;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+footer {
+  background: var(--gl-bg) !important;
+  border-top: 1px solid var(--gl-border-subtle) !important;
+  color: var(--gl-text-subtle) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Scrollbars
+   -------------------------------------------------------------------------- */
+
+* {
+  scrollbar-color: #4a4a4a #171717;
+}
+
+*::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #171717;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #454545;
+  border: 3px solid #171717;
+  border-radius: 7px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+  .repository .repo-header h1,
+  .repository .repository-header h1,
+  .repository .repo-title {
+    font-size: 25px;
+    line-height: 32px;
+  }
+
+  .repository .markdown,
+  .repository .markdown-body {
+    font-size: 15px;
+  }
+}
+

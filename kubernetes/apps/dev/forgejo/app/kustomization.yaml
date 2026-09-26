@@ -12,6 +12,6 @@ resources:
 configMapGenerator:
   - name: forgejo-custom-theme
     files:
-      - theme-gitlabish-light.css
+      - theme-gitlab-dark.css
 generatorOptions:
   disableNameSuffixHash: true
