@@ -8,3 +8,10 @@ resources:
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./externalsecret.yaml
+
+configMapGenerator:
+  - name: forgejo-custom-theme
+    files:
+      - theme-gitlabish-light.css
+generatorOptions:
+  disableNameSuffixHash: true

@@ -44,6 +44,9 @@ spec:
           HOST: postgres18-rw.database.svc.cluster.local:5432
           NAME: forgejo
           USER: forgejo
+        ui:
+          THEMES: forgejo-auto,forgejo-light,forgejo-dark,gitlabish-light
+          DEFAULT_THEME: gitlabish-light
         cache:
           ADAPTER: memory
         server:
@@ -56,6 +59,15 @@ spec:
           SHOW_REGISTRATION_BUTTON: true
         webhook:
           ALLOWED_HOST_LIST: "*"
+    extraVolumes:
+      - name: custom-theme
+        configMap:
+          name: forgejo-custom-theme
+    extraContainerVolumeMounts:
+      - name: custom-theme
+        subPath: theme-gitlabish-light.css
+        mountPath: /data/gitea/public/assets/css/theme-gitlabish-light.css
+        readOnly: true
     image:
       rootless: true
       registry: code.forgejo.org
