@@ -5,10 +5,10 @@ namespace: flux-system
 
 components:
   - ../../components/sops
-  - ../../components/telegram-alert
+  - ../../components/ntfy-alert
 
 resources:
   - ./namespace.yaml
   - ./flux-instance/ks.yaml
   - ./flux-operator/ks.yaml
-  - ./telegram-bridge/ks.yaml
+  - ./ntfy-bridge/ks.yaml

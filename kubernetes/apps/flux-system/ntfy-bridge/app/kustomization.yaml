@@ -5,7 +5,7 @@ resources:
   - ./deployment.yaml
   - ./service.yaml
 configMapGenerator:
-  - name: telegram-bridge-code
+  - name: ntfy-bridge-code
     files:
       - app.py
 generatorOptions:

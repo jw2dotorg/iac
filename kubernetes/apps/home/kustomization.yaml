@@ -5,7 +5,7 @@ namespace: home
 
 components:
   - ../../components/sops
-  - ../../components/telegram-alert
+  - ../../components/ntfy-alert
 
 resources:
   - ./namespace.yaml

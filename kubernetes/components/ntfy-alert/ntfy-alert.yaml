@@ -2,18 +2,18 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Provider
 metadata:
-  name: telegram
+  name: ntfy
 spec:
   type: generic
-  address: http://telegram-bridge.flux-system.svc.cluster.local:8080/
+  address: http://ntfy-bridge.flux-system.svc.cluster.local:8080/
 ---
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
-  name: telegram-alert
+  name: ntfy-alert
 spec:
   providerRef:
-    name: telegram
+    name: ntfy
   eventSeverity: info
   eventSources:
     - kind: Kustomization
