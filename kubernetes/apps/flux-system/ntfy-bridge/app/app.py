@@ -3,9 +3,6 @@ import json
 import urllib.request
 import os
 
-TOKEN = os.getenv("TELEGRAM_TOKEN")
-CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-
 class WebhookHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
@@ -28,31 +25,31 @@ class WebhookHandler(BaseHTTPRequestHandler):
             else:
                 revision_hash = revision[:7]
                 
-            # Select emoji based on severity
-            emoji = "ℹ️"
+            # Select tags based on severity
+            tags = "information_source"
             if severity == "error":
-                emoji = "🔴"
+                tags = "red_circle,warning"
             elif "succeeded" in message.lower() or "finished" in message.lower():
-                emoji = "🟢"
+                tags = "green_circle,white_check_mark"
                 
-            # Format HTML message (safer than Markdown)
-            msg_text = f"{emoji} <b>{kind}</b> ➔ <b>{name}</b> ({namespace})\n\n"
-            msg_text += f"{message}\n\n"
+            # Format message
+            msg_text = f"{message}\n\n"
             if revision_hash:
-                msg_text += f"• <b>Revision:</b> <code>{revision_hash}</code>"
+                msg_text += f"Revision: {revision_hash}"
                 
-            # Send to Telegram
-            url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-            req_data = json.dumps({
-                "chat_id": CHAT_ID,
-                "text": msg_text,
-                "parse_mode": "HTML"
-            }).encode('utf-8')
+            title = f"{kind} {namespace}/{name}"
+            
+            # Send to ntfy
+            url = "https://ntfy.jw2.org/gitops"
+            req_data = msg_text.encode('utf-8')
             
             req = urllib.request.Request(
                 url, 
                 data=req_data, 
-                headers={'Content-Type': 'application/json'}
+                headers={
+                    'Title': title,
+                    'Tags': tags
+                }
             )
             with urllib.request.urlopen(req) as response:
                 pass
@@ -65,7 +62,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
 def run():
     port = int(os.getenv("PORT", 8080))
     server = HTTPServer(('', port), WebhookHandler)
-    print(f"Starting webhook bridge on port {port}...")
+    print(f"Starting ntfy bridge on port {port}...")
     server.serve_forever()
 
 if __name__ == '__main__':
