@@ -50,7 +50,7 @@ spec:
         annotations:
           lbipam.cilium.io/ips: "172.16.0.95"
           external-dns.alpha.kubernetes.io/hostname: omada-controller.${SECRET_OG_DOMAIN}
-        externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster
         ports:
           mgmt-8088-tcp:
             enabled: true
