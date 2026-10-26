@@ -27,3 +27,6 @@ spec:
       key: KOPIA_PASSWORD
   scheduleDefaults:
     timezone: America/New_York
+  parameters:
+    epoch:
+      minDuration: 6h
