@@ -9,9 +9,7 @@ spec:
     compressor: zstd
   mover:
     cache:
-      capacity: ${KOPIUR_CAPACITY:=5Gi}
-      mode: Persistent
-      storageClassName: openebs-hostpath
+      mode: Ephemeral
     securityContext:
       runAsUser: ${KOPIUR_PUID:=1000}
       runAsGroup: ${KOPIUR_PGID:=1000}
