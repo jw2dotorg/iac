@@ -38,8 +38,6 @@ spec:
               GRAMPSWEB_OIDC_ENABLED: "true"
               GRAMPSWEB_OIDC_NAME: Authentik
               GRAMPSWEB_OIDC_ISSUER: https://sso.${SECRET_OG_DOMAIN}/application/o/gramps/
-              GRAMPSWEB_OIDC_GROUP_ADMIN: authentik Admins
-              GRAMPSWEB_OIDC_GROUP_OWNER: authentik Admins
               GRAMPSWEB_EMAIL_HOST: mail.${SECRET_OG_DOMAIN}
               GRAMPSWEB_DEFAULT_FROM_EMAIL: "Gramps Web <gramps@${SECRET_OG_DOMAIN}>"
               GRAMPSWEB_CELERY_CONFIG__broker_url: redis://dragonfly.database.svc.cluster.local:6379/2
