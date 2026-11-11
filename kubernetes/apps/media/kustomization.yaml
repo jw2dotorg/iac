@@ -20,3 +20,4 @@ resources:
   - ./immich/ks.yaml
   - ./maintainerr/ks.yaml
   - ./cliparr/ks.yaml
+  - ./gramps/ks.yaml

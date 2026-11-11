@@ -36,6 +36,11 @@ spec:
       envFrom: &envFrom
         - secretRef:
             name: *app
+        - secretRef:
+            name: authentik-oidc
+    blueprints:
+      configMaps:
+        - authentik-blueprints
     authentik:
       redis:
         host: dragonfly.database.svc.cluster.local
